@@ -1,29 +1,37 @@
 import os
 import pandas as pd
 import numpy as np
-import pyodbc
 
 
-my_data_folder = os.path.dirname(r'C:\Users\Magnus\Documents\Master\AmazonWebServices\survey_on_income_and_living_conditions\\')
-healthSurvey1968 = os.path.join(my_data_folder, r'HealthSurvey1968.csv')
-healthSurvey1975 = os.path.join(my_data_folder, r'HealthSurvey1975.csv')
-healthSurvey1985 = os.path.join(my_data_folder, r'HealthSurvey1985.csv')
-healthSurvey1995 = os.path.join(my_data_folder, r'HealthSurvey1995.csv')
+# my_data_folder = os.path.dirname(r'C:\Users\Magnus\Documents\Master\AmazonWebServices\survey_on_income_and_living_conditions\\')
+# healthSurvey1968 = os.path.join(my_data_folder, r'HealthSurvey1968.csv')
+# healthSurvey1975 = os.path.join(my_data_folder, r'HealthSurvey1975.csv')
+# healthSurvey1985 = os.path.join(my_data_folder, r'HealthSurvey1985.csv')
+# healthSurvey1995 = os.path.join(my_data_folder, r'HealthSurvey1995.csv')
 
-healthSurvey1968csv = pd.read_csv(healthSurvey1968)
-healthSurvey1975csv = pd.read_csv(healthSurvey1975, low_memory=False)
+my_data_folder_home = os.path.dirname(r'C:\Users\Magnus L. Vestby\Documents\Universitetsarbeid\Master\INFO390\LivingConditionsSurvey\\')
+livingConditionsSurvey2018 = os.path.join(my_data_folder_home, r'LivingConditionsSurveyEUSILC2018.csv')
+livingConditionsSurvey2017 = os.path.join(my_data_folder_home, r'LivingConditionsSurveyEUSILC2017.csv')
+
+# healthSurvey1968csv = pd.read_csv(healthSurvey1968)
+# healthSurvey1975csv = pd.read_csv(healthSurvey1975, low_memory=False)
+
 
 def readCSVSurvey(csvfile):
-    readCSV = pd.read_csv(csvfile)
+    readCSV = pd.read_csv(csvfile, low_memory=False)
     return readCSV
 
+
 def readCSVSurveyConvertToDataFrame(csvfile):
-    readCSV = pd.read_csv(csvfile)
+    readCSV = pd.read_csv(csvfile, low_memory=False)
     df_readCSV = pd.DataFrame(readCSV)
     return df_readCSV
 
-csv1 = readCSVSurvey(healthSurvey1968)
 
-df1 = readCSVSurveyConvertToDataFrame(healthSurvey1968)
+csv1 = readCSVSurvey(livingConditionsSurvey2018)
 
-print(df1)
+# df1 = readCSVSurveyConvertToDataFrame(livingConditionsSurvey2018)
+df2 = readCSVSurveyConvertToDataFrame(livingConditionsSurvey2017)
+# print(list(df1.columns))
+
+print(list(df2.columns))

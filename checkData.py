@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 import numpy as np
+import IPython
 
 
 # my_data_folder = os.path.dirname(r'C:\Users\Magnus\Documents\Master\AmazonWebServices\survey_on_income_and_living_conditions\\')
@@ -35,3 +36,11 @@ df2 = readCSVSurveyConvertToDataFrame(livingConditionsSurvey2017)
 # print(list(df1.columns))
 
 print(list(df2.columns))
+avgInntekt = df2['saminnt_su'].mean()
+avgLonnSu = df2['lonn_su'].mean()
+avgLonnEtterSkatt = df2['wies_1'].mean()
+print(avgInntekt)
+print(avgLonnSu)
+print(avgLonnEtterSkatt)
+
+#print(df2.describe())

@@ -4,9 +4,9 @@ import numpy as np
 
 
 # Bærbare
-#my_data_folder = os.path.dirname(r'C:\Users\Magnus\Documents\Master\AmazonWebServices\survey_on_income_and_living_conditions\\')
+my_data_folder = os.path.dirname(r'C:\Users\Magnus\Documents\Master\AmazonWebServices\survey_on_income_and_living_conditions\\')
 # Stasjonære
-my_data_folder = os.path.dirname(r'C:\Users\Magnus L. Vestby\Documents\Universitetsarbeid\Master\INFO390\LivingConditionsSurvey\\')
+#my_data_folder = os.path.dirname(r'C:\Users\Magnus L. Vestby\Documents\Universitetsarbeid\Master\INFO390\LivingConditionsSurvey\\')
 
 # healthSurvey1968 = os.path.join(my_data_folder, r'HealthSurvey1968.csv')
 # healthSurvey1975 = os.path.join(my_data_folder, r'HealthSurvey1975.csv')
@@ -65,21 +65,33 @@ def checkType(dataFrame):
 
 #checkType(df2017)
 
-def createArrayWithAverageValues(dataFrame):
-    chosenColumn = dataFrame['wies_3']
+def createDictWithIndexValuesAndAverageValues(dataFrame, seriesName):
+    chosenColumn = dataFrame[seriesName]
+    dictWithValidInformation = dict()
     addition = 0
     noRow = 0
     filter = ' '
     for item in chosenColumn.iteritems():
-        if item[1] != filter:
+        if item[1] != filter and int(item[1]) > 0:
             addition += int(item[1])
             noRow += 1
-    return addition/noRow
+            dictWithValidInformation[item[0]] = item[1]
+    dictWithValidInformation['avgValue'] = addition/noRow
+    return dictWithValidInformation
 
-print(createArrayWithAverageValues(df2017))
+
+def storeInDictionary(dataFrame, seriesName):
+    tempDict = (createDictWithIndexValuesAndAverageValues(dataFrame, seriesName))
+    print(tempDict.keys())
+
+storeInDictionary(df2017, 'wies_3')
+
+
+#print(createArrayWithAverageValues(df2017, 'wies_3'))
 
 def createArrayForThoseWithHigherPayAndTheirAverageValues():
     return
+
 
 def createArrayForThoseWithLowerPayAndTheirAverageValues():
     return

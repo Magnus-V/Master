@@ -4,9 +4,9 @@ import numpy as np
 
 
 # Bærbare
-my_data_folder = os.path.dirname(r'C:\Users\Magnus\Documents\Master\AmazonWebServices\survey_on_income_and_living_conditions\\')
+#my_data_folder = os.path.dirname(r'C:\Users\Magnus\Documents\Master\AmazonWebServices\survey_on_income_and_living_conditions\\')
 # Stasjonære
-#my_data_folder = os.path.dirname(r'C:\Users\Magnus L. Vestby\Documents\Universitetsarbeid\Master\INFO390\LivingConditionsSurvey\\')
+my_data_folder = os.path.dirname(r'C:\Users\Magnus L. Vestby\Documents\Universitetsarbeid\Master\INFO390\LivingConditionsSurvey\\')
 
 # healthSurvey1968 = os.path.join(my_data_folder, r'HealthSurvey1968.csv')
 # healthSurvey1975 = os.path.join(my_data_folder, r'HealthSurvey1975.csv')
@@ -52,15 +52,31 @@ def functionThatFindsCorrelationBetweenHigherThanAveragePay():
 
     """
 
+
+def removeEmptyStringsInDataFrameSeries(dataFrame, seriesName):
+    dataFrame(str(seriesName)).replace('', np.nan, inplace=True)
+    print(dataFrame(str(seriesName)))
+
+#removeEmptyStringsInDataFrameSeries(df2017, 'wies_3')
+
+def checkType(dataFrame):
+    dataFrame['wies_3'].astype(bool)
+    print(dataFrame[dataFrame['wies_3'].astype(bool)])
+
+#checkType(df2017)
+
 def createArrayWithAverageValues(dataFrame):
+    chosenColumn = dataFrame['wies_3']
     addition = 0
     noRow = 0
-    for row in dataFrame:
-        addition =+ dataFrame['wies_3'].values(row)
-        noRow =+ 1
+    filter = ' '
+    for item in chosenColumn.iteritems():
+        if item[1] != filter:
+            addition += int(item[1])
+            noRow += 1
     return addition/noRow
 
-createArrayWithAverageValues(df2017)
+print(createArrayWithAverageValues(df2017))
 
 def createArrayForThoseWithHigherPayAndTheirAverageValues():
     return

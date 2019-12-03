@@ -4,9 +4,9 @@ import numpy as np
 
 
 # Bærbare
-my_data_folder = os.path.dirname(r'C:\Users\Magnus\Documents\Master\AmazonWebServices\survey_on_income_and_living_conditions\\')
+#my_data_folder = os.path.dirname(r'C:\Users\Magnus\Documents\Master\AmazonWebServices\survey_on_income_and_living_conditions\\')
 # Stasjonære
-#my_data_folder = os.path.dirname(r'C:\Users\Magnus L. Vestby\Documents\Universitetsarbeid\Master\INFO390\LivingConditionsSurvey\\')
+my_data_folder = os.path.dirname(r'C:\Users\Magnus L. Vestby\Documents\Universitetsarbeid\Master\INFO390\LivingConditionsSurvey\\')
 
 # healthSurvey1968 = os.path.join(my_data_folder, r'HealthSurvey1968.csv')
 # healthSurvey1975 = os.path.join(my_data_folder, r'HealthSurvey1975.csv')
@@ -26,9 +26,26 @@ def readCSVSurveyConvertToDataFrame(csvfile):
     df_readCSV = pd.DataFrame(readCSV)
     return df_readCSV
 
+def listOfColumnsToBeUsedInProject():
+    #Background variabels
+    Sex = 'kjonn_1'
+    Region = 'landsdel'
+    IOs_familyPhase = 'fam_fase'
+    sizeOfUrbanArea = 'ts_stor'
+    ageGroup = 'aldgrupp'
+    heightCm = 'bm1'
+    weightKg = 'bm2'
+    SelfdefinedSocioeconomicStatus = 'selvsosstat'
+    HighestLevelOfEducation = 'utdnivaa'
+    disabilityBenefits = 'bel21_8_su'
+    TotalIncome = 'saminnt_su'
+    IncomeAfterTax = 'wies_su'
+
+    #Work variables
+
 
 df2017 = readCSVSurveyConvertToDataFrame(livingConditionsSurvey2017)
-
+print(df2017.head())
 
 #print(list(df2017.columns))
 #avgInntekt = df2['saminnt_su'].mean()
@@ -84,7 +101,7 @@ def storeInDictionary(dataFrame, seriesName):
     tempDict = (createDictWithIndexValuesAndAverageValues(dataFrame, seriesName))
     print(tempDict.keys())
 
-storeInDictionary(df2017, 'wies_3')
+#storeInDictionary(df2017, 'wies_3')
 
 
 #print(createArrayWithAverageValues(df2017, 'wies_3'))

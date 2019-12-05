@@ -42,10 +42,33 @@ def listOfColumnsToBeUsedInProject():
     IncomeAfterTax = 'wies_su'
 
     #Work variables
+    CurrentMainActivity = 'naa_1'
+
+    #Household variables
+    IsIOMarriedCohabitant = 'siv_1'
+    MaritalStatus = 'sivstat_1'
+    ImmigrationCategory = 'invkat_1'
+    NumberOfChildrenUnder17 = 'antbarn'
+    ProblemsWithRot = 'bol6a'
+    ProblemsWithMoisture = 'bol6b'
+    ProblemsWithNoise = 'bol6d'
+    ProblemsWithDustSmellOrPollution = 'bol6e'
+    ProblemsWithCrime = 'bol6f'
+    TypeOfHouse = 'hus'
+
+    #Expenses and Economic Variables
+    AffordOneWeekVacation = 'raad1'
+    AffordMeatChickenOrFishEveryOtherDay = 'raad2'
+    AffordToKeepHouseWarm = 'raad4'
+    AffordToReplaceOutwornFurniture = 'raad5'
+    SalesValueOfHouse = 'salg1'
+    HandleUnforseenExpensesOfTenThousandNorwegianKroner = 'end3b'
+    
 
 
 df2017 = readCSVSurveyConvertToDataFrame(livingConditionsSurvey2017)
 print(df2017.head())
+
 
 #print(list(df2017.columns))
 #avgInntekt = df2['saminnt_su'].mean()
@@ -74,7 +97,9 @@ def removeEmptyStringsInDataFrameSeries(dataFrame, seriesName):
     dataFrame(str(seriesName)).replace('', np.nan, inplace=True)
     print(dataFrame(str(seriesName)))
 
+
 #removeEmptyStringsInDataFrameSeries(df2017, 'wies_3')
+
 
 def checkType(dataFrame):
     dataFrame['wies_3'].astype(bool)
@@ -100,6 +125,7 @@ def createDictWithIndexValuesAndAverageValues(dataFrame, seriesName):
 def storeInDictionary(dataFrame, seriesName):
     tempDict = (createDictWithIndexValuesAndAverageValues(dataFrame, seriesName))
     print(tempDict.keys())
+
 
 #storeInDictionary(df2017, 'wies_3')
 

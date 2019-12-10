@@ -42,7 +42,8 @@ def listOfColumnsToBeUsedInProject():
     IncomeAfterTax = 'wies_su'
 
     #Work variables
-    CurrentMainActivity = 'naa_1'
+    currentMainActivity = 'naa_1'
+    incomeFromWorkLastWeek = 'arb1_1'
 
     #Household variables
     IsIOMarriedCohabitant = 'siv_1'
@@ -57,13 +58,43 @@ def listOfColumnsToBeUsedInProject():
     TypeOfHouse = 'hus'
 
     #Expenses and Economic Variables
+    ProblemsPayingRent = 'prob1'
+    ProblemsPayingMortgage = 'prob2'
+    ProblemsPayingElectricityAndTaxes = 'prob3'
+    ProblemsPayingOtherLoans = 'prob4'
     AffordOneWeekVacation = 'raad1'
     AffordMeatChickenOrFishEveryOtherDay = 'raad2'
     AffordToKeepHouseWarm = 'raad4'
     AffordToReplaceOutwornFurniture = 'raad5'
     SalesValueOfHouse = 'salg1'
     HandleUnforseenExpensesOfTenThousandNorwegianKroner = 'end3b'
-    
+
+    #Helse
+    SelfAssesmentOfHealth = 'hels1'
+    CronicPainOrHealthIssues = 'hels2a'
+    DisabilitiesOrPainsCausedByInjury = 'hels2b'
+    ConstraintsDailyActivity = 'hels3a1'
+    LevelOfConstraints = 'hels3b'
+    NeedForDentalCheckWithoutDoingIt = 'hels5a'
+    ReasonForNotCheckDentalStatus = 'hels5b'
+    DegreeOfFinancialBurdenOfHealthExpenses = 'hs200'
+    DegreeOfFinancialBurdenOfDentalExpenses = 'hs210a'
+    DegreeOfFinancialBurdenOfMedicinalExpenses = 'hs220'
+
+    #SocialCapitalAndHappiness
+    RatingOfHappiness = 'pw010'
+    RatingOfMeaningfullness = 'pw020'
+    RateYesterdaysFeelingOfHappiness = 'affekt1'
+    RateYesterdaysFeelingOfWorry = 'affekt2'
+    RateYesterdaysFeelingOfSadness = 'affekt3'
+    HaveSomeoneCloseIfPersonalProblems = 'sk7a'
+    TrustInPeople = 'soskap1'
+    DoPeopleTreatOthersWell = 'soskap2'
+
+    #Political participation and organizational work
+    DidVoluntaryWork = 'org10a'
+    BelongToAReligion = 'rel1a'
+
 
 
 df2017 = readCSVSurveyConvertToDataFrame(livingConditionsSurvey2017)

@@ -28,73 +28,98 @@ def readCSVSurveyConvertToDataFrame(csvfile):
 
 def listOfColumnsToBeUsedInProject():
     #Background variabels
-    Sex = 'kjonn_1'
-    Region = 'landsdel'
-    IOs_familyPhase = 'fam_fase'
-    sizeOfUrbanArea = 'ts_stor'
-    ageGroup = 'aldgrupp'
-    heightCm = 'bm1'
-    weightKg = 'bm2'
-    SelfdefinedSocioeconomicStatus = 'selvsosstat'
-    HighestLevelOfEducation = 'utdnivaa'
-    disabilityBenefits = 'bel21_8_su'
-    TotalIncome = 'saminnt_su'
-    IncomeAfterTax = 'wies_su'
+    BSex = 'kjonn_1'
+    BRegion = 'landsdel'
+    BIOsFamilyPhase = 'fam_fase'
+    BSizeOfUrbanArea = 'ts_stor'
+    BAgeGroup = 'aldgrupp'
+    BHeightCm = 'bm1'
+    BWeightKg = 'bm2'
+    BSelfdefinedSocioeconomicStatus = 'selvsosstat'
+    BHighestLevelOfEducation = 'utdnivaa'
+    BDisabilityBenefits = 'bel21_8_su'
+    BTotalIncome = 'saminnt_su'
+    BIncomeAfterTax = 'wies_su'
 
     #Work variables
-    currentMainActivity = 'naa_1'
-    incomeFromWorkLastWeek = 'arb1_1'
+    WCurrentMainActivity = 'naa_1'
+    WIncomeFromWorkLastWeek = 'arb1_1'
 
     #Household variables
-    IsIOMarriedCohabitant = 'siv_1'
-    MaritalStatus = 'sivstat_1'
-    ImmigrationCategory = 'invkat_1'
-    NumberOfChildrenUnder17 = 'antbarn'
-    ProblemsWithRot = 'bol6a'
-    ProblemsWithMoisture = 'bol6b'
-    ProblemsWithNoise = 'bol6d'
-    ProblemsWithDustSmellOrPollution = 'bol6e'
-    ProblemsWithCrime = 'bol6f'
-    TypeOfHouse = 'hus'
+    HIsIOMarriedCohabitant = 'siv_1'
+    HMaritalStatus = 'sivstat_1'
+    HImmigrationCategory = 'invkat_1'
+    HNumberOfChildrenUnder17 = 'antbarn'
+    HProblemsWithRot = 'bol6a'
+    HProblemsWithMoisture = 'bol6b'
+    HProblemsWithNoise = 'bol6d'
+    HProblemsWithDustSmellOrPollution = 'bol6e'
+    HProblemsWithCrime = 'bol6f'
+    HTypeOfHouse = 'hus'
 
     #Expenses and Economic Variables
-    ProblemsPayingRent = 'prob1'
-    ProblemsPayingMortgage = 'prob2'
-    ProblemsPayingElectricityAndTaxes = 'prob3'
-    ProblemsPayingOtherLoans = 'prob4'
-    AffordOneWeekVacation = 'raad1'
-    AffordMeatChickenOrFishEveryOtherDay = 'raad2'
-    AffordToKeepHouseWarm = 'raad4'
-    AffordToReplaceOutwornFurniture = 'raad5'
-    SalesValueOfHouse = 'salg1'
-    HandleUnforseenExpensesOfTenThousandNorwegianKroner = 'end3b'
+    EProblemsPayingRent = 'prob1'
+    EProblemsPayingMortgage = 'prob2'
+    EProblemsPayingElectricityAndTaxes = 'prob3'
+    EProblemsPayingOtherLoans = 'prob4'
+    EAffordOneWeekVacation = 'raad1'
+    EAffordMeatChickenOrFishEveryOtherDay = 'raad2'
+    EAffordToKeepHouseWarm = 'raad4'
+    EAffordToReplaceOutwornFurniture = 'raad5'
+    ESalesValueOfHouse = 'salg1'
+    EHandleUnforseenExpensesOfTenThousandNorwegianKroner = 'end3b'
 
-    #Helse
-    SelfAssesmentOfHealth = 'hels1'
-    CronicPainOrHealthIssues = 'hels2a'
-    DisabilitiesOrPainsCausedByInjury = 'hels2b'
-    ConstraintsDailyActivity = 'hels3a1'
-    LevelOfConstraints = 'hels3b'
-    NeedForDentalCheckWithoutDoingIt = 'hels5a'
-    ReasonForNotCheckDentalStatus = 'hels5b'
-    DegreeOfFinancialBurdenOfHealthExpenses = 'hs200'
-    DegreeOfFinancialBurdenOfDentalExpenses = 'hs210a'
-    DegreeOfFinancialBurdenOfMedicinalExpenses = 'hs220'
+    #Health
+    HeSelfAssesmentOfHealth = 'hels1'
+    HeCronicPainOrHealthIssues = 'hels2a'
+    HeDisabilitiesOrPainsCausedByInjury = 'hels2b'
+    HeConstraintsDailyActivity = 'hels3a1'
+    HeLevelOfConstraints = 'hels3b'
+    HeNeedForDentalCheckWithoutDoingIt = 'hels5a'
+    HeReasonForNotCheckDentalStatus = 'hels5b'
+    HeDegreeOfFinancialBurdenOfHealthExpenses = 'hs200'
+    HeDegreeOfFinancialBurdenOfDentalExpenses = 'hs210a'
+    HeDegreeOfFinancialBurdenOfMedicinalExpenses = 'hs220'
 
     #SocialCapitalAndHappiness
-    RatingOfHappiness = 'pw010'
-    RatingOfMeaningfullness = 'pw020'
-    RateYesterdaysFeelingOfHappiness = 'affekt1'
-    RateYesterdaysFeelingOfWorry = 'affekt2'
-    RateYesterdaysFeelingOfSadness = 'affekt3'
-    HaveSomeoneCloseIfPersonalProblems = 'sk7a'
-    TrustInPeople = 'soskap1'
-    DoPeopleTreatOthersWell = 'soskap2'
+    SRatingOfHappiness = 'pw010'
+    SRatingOfMeaningfullness = 'pw020'
+    SRateYesterdaysFeelingOfHappiness = 'affekt1'
+    SRateYesterdaysFeelingOfWorry = 'affekt2'
+    SRateYesterdaysFeelingOfSadness = 'affekt3'
+    SHaveSomeoneCloseIfPersonalProblems = 'sk7a'
+    STrustInPeople = 'soskap1'
+    SDoPeopleTreatOthersWell = 'soskap2'
 
     #Political participation and organizational work
-    DidVoluntaryWork = 'org10a'
-    BelongToAReligion = 'rel1a'
+    PDidVoluntaryWork = 'org10a'
+    PBelongToAReligion = 'rel1a'
 
+
+    backgroundVariabelsList = [BSex, BRegion, BIOsFamilyPhase, BSizeOfUrbanArea, BAgeGroup, BHeightCm, BWeightKg,
+                                   BSelfdefinedSocioeconomicStatus, BHighestLevelOfEducation, BDisabilityBenefits, BTotalIncome,
+                                   BIncomeAfterTax]
+    workVariabelsList = [WCurrentMainActivity, WIncomeFromWorkLastWeek]
+    householdVariabelsList = [HIsIOMarriedCohabitant, HMaritalStatus, HImmigrationCategory, HNumberOfChildrenUnder17,
+                                  HProblemsWithRot, HProblemsWithMoisture, HProblemsWithNoise, HProblemsWithDustSmellOrPollution,
+                                  HProblemsWithCrime, HTypeOfHouse]
+    economicVariabelsList = [EProblemsPayingRent, EProblemsPayingMortgage, EProblemsPayingElectricityAndTaxes,
+                                 EProblemsPayingOtherLoans, EAffordOneWeekVacation, EAffordMeatChickenOrFishEveryOtherDay,
+                                 EAffordToKeepHouseWarm, EAffordToReplaceOutwornFurniture, ESalesValueOfHouse,
+                                 EHandleUnforseenExpensesOfTenThousandNorwegianKroner]
+    healthVariabelsList = [HeSelfAssesmentOfHealth, HeCronicPainOrHealthIssues, HeDisabilitiesOrPainsCausedByInjury,
+                               HeConstraintsDailyActivity, HeLevelOfConstraints, HeNeedForDentalCheckWithoutDoingIt,
+                               HeReasonForNotCheckDentalStatus, HeDegreeOfFinancialBurdenOfHealthExpenses,
+                               HeDegreeOfFinancialBurdenOfDentalExpenses, HeDegreeOfFinancialBurdenOfMedicinalExpenses]
+    socialVariabelsList = [SRatingOfHappiness, SRatingOfMeaningfullness, SRateYesterdaysFeelingOfHappiness,
+                           SRateYesterdaysFeelingOfWorry, SRateYesterdaysFeelingOfSadness, SHaveSomeoneCloseIfPersonalProblems,
+                           STrustInPeople, SDoPeopleTreatOthersWell]
+    politicalVariabelsList = [PDidVoluntaryWork, PBelongToAReligion]
+
+    variabelList = [backgroundVariabelsList, workVariabelsList, householdVariabelsList, economicVariabelsList,
+                    healthVariabelsList, socialVariabelsList,  politicalVariabelsList]
+
+    return variabelList
 
 
 df2017 = readCSVSurveyConvertToDataFrame(livingConditionsSurvey2017)

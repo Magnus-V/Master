@@ -4,9 +4,9 @@ import numpy as np
 
 
 # Bærbare
-#my_data_folder = os.path.dirname(r'C:\Users\Magnus\Documents\Master\AmazonWebServices\survey_on_income_and_living_conditions\\')
+my_data_folder = os.path.dirname(r'C:\Users\Magnus\Documents\Master\AmazonWebServices\survey_on_income_and_living_conditions\\')
 # Stasjonære
-my_data_folder = os.path.dirname(r'C:\Users\Magnus L. Vestby\Documents\Universitetsarbeid\Master\INFO390\LivingConditionsSurvey\\')
+#my_data_folder = os.path.dirname(r'C:\Users\Magnus L. Vestby\Documents\Universitetsarbeid\Master\INFO390\LivingConditionsSurvey\\')
 
 # healthSurvey1968 = os.path.join(my_data_folder, r'HealthSurvey1968.csv')
 # healthSurvey1975 = os.path.join(my_data_folder, r'HealthSurvey1975.csv')
@@ -123,7 +123,10 @@ def listOfColumnsToBeUsedInProject():
 
 
 df2017 = readCSVSurveyConvertToDataFrame(livingConditionsSurvey2017)
-print(df2017.head())
+
+#print(df2017.head())
+
+#print(listOfColumnsToBeUsedInProject())
 
 
 #print(list(df2017.columns))
@@ -150,12 +153,12 @@ def functionThatFindsCorrelationBetweenHigherThanAveragePay():
 
 
 def removeEmptyStringsInDataFrameSeries(dataFrame, seriesName):
-    dataFrame(str(seriesName)).replace('', np.nan, inplace=True)
+    cleanDataframe = dataFrame(str(seriesName)).replace('', np.nan, inplace=True)
     print(dataFrame(str(seriesName)))
+    return cleanDataframe
 
 
 #removeEmptyStringsInDataFrameSeries(df2017, 'wies_3')
-
 
 def checkType(dataFrame):
     dataFrame['wies_3'].astype(bool)
@@ -195,3 +198,10 @@ def createArrayForThoseWithHigherPayAndTheirAverageValues():
 def createArrayForThoseWithLowerPayAndTheirAverageValues():
     return
 
+
+def createWageGroups(dataFrame):
+    BTotalIncome = 'saminnt_su'
+    checkit = createDictWithIndexValuesAndAverageValues(dataFrame, BTotalIncome)
+    print(checkit)
+
+createWageGroups(df2017)

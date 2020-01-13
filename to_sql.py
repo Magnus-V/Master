@@ -1,6 +1,10 @@
+# import the module
+from sqlalchemy import create_engine
 import os
 import pandas as pd
 import numpy as np
+import pymysql
+import cryptography
 
 
 # Bærbare
@@ -16,15 +20,19 @@ livingConditionsSurvey2017 = os.path.join(my_data_folder, r'LivingConditionsSurv
 livingConditionsSurvey2018 = os.path.join(my_data_folder, r'LivingConditionsSurveyEUSILC2018.csv')
 
 
-def readCSVSurvey(csvfile):
-    readCSV = pd.read_csv(csvfile, low_memory=False)
-    return readCSV
-
+# create sqlalchemy engine
+engine = create_engine("mysql+pymysql://admin:Jule@Nissen94@localhost/master_thesis"
+                       .format(user="root",
+                               pw="Jule@Nissen94",
+                               db="master_thesis"))
 
 def readCSVSurveyConvertToDataFrame(csvfile):
     readCSV = pd.read_csv(csvfile, low_memory=False)
     df_readCSV = pd.DataFrame(readCSV)
     return df_readCSV
+
+df2017 = readCSVSurveyConvertToDataFrame(livingConditionsSurvey2017)
+
 
 def listOfColumnsToBeUsedInProject():
     #Background variabels
@@ -95,7 +103,6 @@ def listOfColumnsToBeUsedInProject():
     PDidVoluntaryWork = 'org10a'
     PBelongToAReligion = 'rel1a'
 
-
     backgroundVariabelsList = [BSex, BRegion, BIOsFamilyPhase, BSizeOfUrbanArea, BAgeGroup, BHeightCm, BWeightKg,
                                    BSelfdefinedSocioeconomicStatus, BHighestLevelOfEducation, BDisabilityBenefits, BTotalIncome,
                                    BIncomeAfterTax]
@@ -119,98 +126,26 @@ def listOfColumnsToBeUsedInProject():
     variabelList = [backgroundVariabelsList, workVariabelsList, householdVariabelsList, economicVariabelsList,
                     healthVariabelsList, socialVariabelsList,  politicalVariabelsList]
 
-    return variabelList
+    variabelListAll = [BSex, BRegion, BIOsFamilyPhase, BSizeOfUrbanArea, BAgeGroup, BHeightCm, BWeightKg,
+                        BSelfdefinedSocioeconomicStatus, BHighestLevelOfEducation, BDisabilityBenefits, BTotalIncome,
+                        BIncomeAfterTax, WCurrentMainActivity, WIncomeFromWorkLastWeek,
+                        HIsIOMarriedCohabitant, HMaritalStatus, HImmigrationCategory, HNumberOfChildrenUnder17,
+                        HProblemsWithRot, HProblemsWithMoisture, HProblemsWithNoise, HProblemsWithDustSmellOrPollution,
+                        HProblemsWithCrime, HTypeOfHouse, EProblemsPayingRent, EProblemsPayingMortgage, EProblemsPayingElectricityAndTaxes,
+                        EProblemsPayingOtherLoans, EAffordOneWeekVacation, EAffordMeatChickenOrFishEveryOtherDay,
+                        EAffordToKeepHouseWarm, EAffordToReplaceOutwornFurniture, ESalesValueOfHouse,
+                        EHandleUnforseenExpensesOfTenThousandNorwegianKroner, HeSelfAssesmentOfHealth, HeCronicPainOrHealthIssues,
+                        HeDisabilitiesOrPainsCausedByInjury,
+                        HeConstraintsDailyActivity, HeLevelOfConstraints, HeNeedForDentalCheckWithoutDoingIt,
+                        HeReasonForNotCheckDentalStatus, HeDegreeOfFinancialBurdenOfHealthExpenses,
+                        HeDegreeOfFinancialBurdenOfDentalExpenses, HeDegreeOfFinancialBurdenOfMedicinalExpenses,
+                        SRatingOfHappiness, SRatingOfMeaningfullness, SRateYesterdaysFeelingOfHappiness,
+                        SRateYesterdaysFeelingOfWorry, SRateYesterdaysFeelingOfSadness,
+                        SHaveSomeoneCloseIfPersonalProblems, STrustInPeople, SDoPeopleTreatOthersWell,PDidVoluntaryWork,
+                        PBelongToAReligion]
 
+    return variabelListAll
 
-df2017 = readCSVSurveyConvertToDataFrame(livingConditionsSurvey2017)
+df2017filter = df2017.filter(items= listOfColumnsToBeUsedInProject())
 
-#print(df2017.head())
-
-#print(listOfColumnsToBeUsedInProject())
-
-
-#print(list(df2017.columns))
-#avgInntekt = df2['saminnt_su'].mean()
-#avgLonnSu = df2['lonn_su'].mean()
-#avgLonnEtterSkatt = df2017['wies_3'].mean()
-
-
-def findCorrelation(x, y):
-    corrArray = np.corrcoef(x, y)
-    print(corrArray)
-    return corrArray
-
-def functionThatFindsCorrelationBetweenHigherThanAveragePay():
-    # ha et array med gjennomsnittsverdier som gjenspeiler de verdier som gjenspeiler et gjennomsnittsperson i Norge i hver aldersgruppe
-    # Bruker skriver inn sin inntekt og alder
-
-    """"
-    OKAY.
-
-    Funksjon med array for gjennomsnittet, de under gj.snitt og de over gj.snitt. Finn de variablene som avviker mest.
-
-    """
-
-
-def removeEmptyStringsInDataFrameSeries(dataFrame, seriesName):
-    cleanDataframe = dataFrame(str(seriesName)).replace('', np.nan, inplace=True)
-    print(dataFrame(str(seriesName)))
-    return cleanDataframe
-
-
-#removeEmptyStringsInDataFrameSeries(df2017, 'wies_3')
-
-def checkType(dataFrame):
-    dataFrame['wies_3'].astype(bool)
-    print(dataFrame[dataFrame['wies_3'].astype(bool)])
-
-#checkType(df2017)
-
-def createDictWithIndexValuesAndAverageValues(dataFrame, seriesName):
-    chosenColumn = dataFrame[seriesName]
-    dictWithValidInformation = dict()
-    addition = 0
-    noRow = 0
-    filter = ' '
-    for item in chosenColumn.iteritems():
-        if item[1] != filter and int(item[1]) > 0:
-            addition += int(item[1])
-            noRow += 1
-            dictWithValidInformation[item[0]] = item[1]
-    dictWithValidInformation['avgValue'] = addition/noRow
-    return dictWithValidInformation
-
-
-def storeInDictionary(dataFrame, seriesName):
-    tempDict = (createDictWithIndexValuesAndAverageValues(dataFrame, seriesName))
-    print(tempDict.keys())
-
-
-#storeInDictionary(df2017, 'wies_3')
-
-
-#print(createArrayWithAverageValues(df2017, 'wies_3'))
-
-def createArrayForThoseWithHigherPayAndTheirAverageValues():
-    return
-
-
-def createArrayForThoseWithLowerPayAndTheirAverageValues():
-    return
-
-
-def createWageGroups(dataFrame):
-    chosenColumns = dataFrame.filter(['wies_su', 'aldgrupp'])
-    dictWithValidInformation = dict()
-    addition = 0
-    noRow = 0
-    filter = ' '
-    for item in chosenColumns.iteritems():
-        if item[1] != filter and int(item[1]) > 0:
-            addition += int(item[1])
-            noRow += 1
-            dictWithValidInformation[item[0]] = item[1]
-    dictWithValidInformation['avgValue'] = addition / noRow
-    return dictWithValidInformation
-
-print(createWageGroups(df2017))
+df2017filter.to_sql('atbl_living_conditions_survey2017', con = engine, if_exists = 'append', chunksize = 1000)

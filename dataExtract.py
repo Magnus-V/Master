@@ -9,8 +9,22 @@ my_data_folder = os.path.dirname(r'C:\Users\Magnus\Documents\Master\AmazonWebSer
 #my_data_folder = os.path.dirname(r'C:\Users\Magnus L. Vestby\Documents\Universitetsarbeid\Master\INFO390\LivingConditionsSurvey\\')
 
 
-# Coordinated surveys
+# Surveys predating 1996
+HealthSurvey1968 = os.path.join(my_data_folder, r'HealthSurvey1968.csv')
+HealthSurvey1975 = os.path.join(my_data_folder, r'HealthSurvey1975.csv')
+HealthSurvey1985 = os.path.join(my_data_folder, r'HealthSurvey1985.csv')
+HealthSurvey1995 = os.path.join(my_data_folder, r'HealthSurvey1995.csv')
+LivingConditionsSurvey1973 = os.path.join(my_data_folder, r'LivingConditionsSurvey193.csv')
+LivingConditionsSurvey1980 = os.path.join(my_data_folder, r'LivingConditionsSurvey1980.csv')
+LivingConditionsSurvey1981Housing = os.path.join(my_data_folder, r'LivingConditionsSurvey1981.csv')
+LivingConditionsSurvey1983 = os.path.join(my_data_folder, r'LivingConditionsSurvey1983.csv')
+LivingConditionsSurvey1987 = os.path.join(my_data_folder, r'LivingConditionsSurvey1987.csv')
+LivingConditionsSurvey1988Housing = os.path.join(my_data_folder, r'LivingConditionsSurvey1988.csv')
+LivingConditionsSurvey1991 = os.path.join(my_data_folder, r'LivingConditionsSurvey1991.csv')
+LivingConditionsSurvey1995 = os.path.join(my_data_folder, r'LivingConditionsSurvey1995.csv')
+LivingConditionsSurvey1995Housing = os.path.join(my_data_folder, r'LivingConditionsSurvey1995Housing.csv')
 
+# Coordinated surveys
 CoordinatedSurvey2016Work = os.path.join(my_data_folder, r'LivingConditionsSurvey2016Work.csv')
 CoordinatedSurvey2015SocialRegion = os.path.join(my_data_folder, r'LivingConditionsSurvey2015SocialCounty.csv')
 CoordinatedSurvey2013Work = os.path.join(my_data_folder, r'LivingConditionsSurvey2013Work.csv')
@@ -49,3 +63,6 @@ def readCSVSurveyConvertToDataFrame(csvfile):
     readCSV = pd.read_csv(csvfile, low_memory=False)
     df_readCSV = pd.DataFrame(readCSV)
     return df_readCSV
+
+
+df2018 = readCSVSurveyConvertToDataFrame(EUSILC2018)

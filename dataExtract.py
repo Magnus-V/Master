@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 
 
+
 # Bærbare
 my_data_folder = os.path.dirname(r'C:\Users\Magnus\Documents\Master\AmazonWebServices\survey_on_income_and_living_conditions\\')
 # Stasjonære
@@ -14,7 +15,7 @@ HealthSurvey1968 = os.path.join(my_data_folder, r'HealthSurvey1968.csv')
 HealthSurvey1975 = os.path.join(my_data_folder, r'HealthSurvey1975.csv')
 HealthSurvey1985 = os.path.join(my_data_folder, r'HealthSurvey1985.csv')
 HealthSurvey1995 = os.path.join(my_data_folder, r'HealthSurvey1995.csv')
-LivingConditionsSurvey1973 = os.path.join(my_data_folder, r'LivingConditionsSurvey193.csv')
+LivingConditionsSurvey1973 = os.path.join(my_data_folder, r'LivingConditionsSurvey1973.csv')
 LivingConditionsSurvey1980 = os.path.join(my_data_folder, r'LivingConditionsSurvey1980.csv')
 LivingConditionsSurvey1981Housing = os.path.join(my_data_folder, r'LivingConditionsSurvey1981.csv')
 LivingConditionsSurvey1983 = os.path.join(my_data_folder, r'LivingConditionsSurvey1983.csv')
@@ -64,5 +65,18 @@ def readCSVSurveyConvertToDataFrame(csvfile):
     df_readCSV = pd.DataFrame(readCSV)
     return df_readCSV
 
+df1973 = readCSVSurveyConvertToDataFrame(LivingConditionsSurvey1973)
+df2017 = readCSVSurveyConvertToDataFrame(EUSILC2017)
 
-df2018 = readCSVSurveyConvertToDataFrame(EUSILC2018)
+def readDfAndReturnSeries(dataFrame, Seriesname):
+    tempDataSeries = dataFrame[Seriesname]
+    return tempDataSeries
+
+
+df1973income = readDfAndReturnSeries(df1973, 'v406')
+df2017income = readDfAndReturnSeries(df2017, 'wies_su')
+
+def filterOutTheNonWorkingAgeGroups(dataFrame, SeriesName):
+    tempDataSeries = dataFrame[dataFrame[AGEVARIABEL] > 24 && dataFrame[AGEVARIABLE] < 62]]
+print(df1973income.mean)
+print(df2017income.mean)

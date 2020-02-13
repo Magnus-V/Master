@@ -1,13 +1,19 @@
 import os
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
+import sys
+import scipy as sp
+import sklearn
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
 
 
 
 # Bærbare
-my_data_folder = os.path.dirname(r'C:\Users\Magnus\Documents\Master\AmazonWebServices\survey_on_income_and_living_conditions\\')
+my_data_folder = os.path.dirname(r'C:\Users\Magnus\Documents\MasterProg\AmazonWebServices\survey_on_income_and_living_conditions\\')
 # Stasjonære
-#my_data_folder = os.path.dirname(r'C:\Users\Magnus L. Vestby\Documents\Universitetsarbeid\Master\INFO390\LivingConditionsSurvey\\')
+#my_data_folder = os.path.dirname(r'C:\Users\Magnus L. Vestby\Documents\Universitetsarbeid\MasterProg\INFO390\LivingConditionsSurvey\\')
 
 
 # Surveys predating 1996
@@ -65,8 +71,10 @@ def readCSVSurveyConvertToDataFrame(csvfile):
     df_readCSV = pd.DataFrame(readCSV)
     return df_readCSV
 
+
 df1973 = readCSVSurveyConvertToDataFrame(LivingConditionsSurvey1973)
 df2017 = readCSVSurveyConvertToDataFrame(EUSILC2017)
+
 
 def readDfAndReturnSeries(dataFrame, Seriesname):
     tempDataSeries = dataFrame[Seriesname]
@@ -76,7 +84,66 @@ def readDfAndReturnSeries(dataFrame, Seriesname):
 df1973income = readDfAndReturnSeries(df1973, 'v406')
 df2017income = readDfAndReturnSeries(df2017, 'wies_su')
 
-def filterOutTheNonWorkingAgeGroups(dataFrame, SeriesName):
-    tempDataSeries = dataFrame[dataFrame[AGEVARIABEL] > 24 && dataFrame[AGEVARIABLE] < 62]]
-print(df1973income.mean)
-print(df2017income.mean)
+
+def filterWorkingAgeGroups(dataFrame, filter, minAge, maxAge):
+    tempDataSeries = dataFrame[(dataFrame[filter] > minAge) & (dataFrame[filter] < maxAge)]
+    return tempDataSeries
+
+WorkAgeDf1973 = filterWorkingAgeGroups(df1973, 'v002', 24, 64)
+WorkAgeDf2017 = filterWorkingAgeGroups(df2017, 'alder_1', 24, 64)
+
+
+def findIncomeAndEducation(dataFrame, firstCondition, secondCondition):
+    returnArray = []
+    for index, row in dataFrame.iterrows():
+        tempCond = row[firstCondition]
+        tempCond2 = row[secondCondition]
+        tempArray = [tempCond, tempCond2]
+        returnArray.append(tempArray)
+    print(returnArray)
+    return returnArray
+
+def filterOutDatasetsOnFourConditions(dataFrame, firstCondition, secondCondition, thirdCondition, fourthCondition):
+    returnArray = []
+    for index, row in dataFrame.iterrows():
+        tempCond = row[firstCondition]
+        tempCond2 = row[secondCondition]
+        tempCond3 = row[thirdCondition]
+        tempCond4 = row[fourthCondition]
+        tempArray = [tempCond, tempCond2, tempCond3, tempCond4]
+        returnArray.append(tempArray)
+    print(returnArray)
+    return returnArray
+
+
+df1973WorkAgeInomceEducationSicknessInjury = filterOutDatasetsOnFourConditions(WorkAgeDf1973, 'v406', 'v228', 'v243', 'v237')
+
+
+df1973WorkAgeIncome = readDfAndReturnSeries(WorkAgeDf1973,'v406')
+df2017WorkAgeIncome = readDfAndReturnSeries(WorkAgeDf2017,'wies_su')
+
+IncomeAndEducation1973WorkAge = findIncomeAndEducation(WorkAgeDf1973,'v406' ,'v228')
+
+
+
+X = np.asarray(df1973WorkAgeInomceEducationSicknessInjury)
+
+scaler = StandardScaler()
+
+scaler.fit(X)
+
+X = scaler.transform(X)
+
+print(scaler.mean_)
+
+kmeans = KMeans(n_clusters=3)
+
+kmeans.fit(X)
+
+y_kmeans = kmeans.predict(X)
+
+plt.scatter(X[:, 1], X[:, 2], c=y_kmeans, s=50, cmap='viridis')
+
+centers = kmeans.cluster_centers_
+plt.scatter(centers[:, 0], centers[:, 1], c='black', s=200, alpha=0.5);
+plt.show()

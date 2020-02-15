@@ -115,9 +115,38 @@ def filterOutDatasetsOnFourConditions(dataFrame, firstCondition, secondCondition
     print(returnArray)
     return returnArray
 
+def filterOutDatasetsOnListOfConditions(dataFrame, listOfConditions):
+    returnArray = []
+    for index, row in dataFrame.iterrows():
+        tempArray = []
+        tempArraySingleRow = []
+        length = len(listOfConditions)
+        for i in range(0, length):
+            print(i)
+            tempArraySingleRow = []
+            tempCond = row[listOfConditions[i]]
+            tempArraySingleRow.append(tempCond)
+        tempArray.append(tempArraySingleRow)
+        print(tempArray);
+    returnArray.append(tempCond)
 
 df1973WorkAgeInomceEducationSicknessInjury = filterOutDatasetsOnFourConditions(WorkAgeDf1973, 'v406', 'v228', 'v243', 'v237')
 
+def createArrayOfConditions1973():
+    income = 'v406'
+    educationLevel = 'v228'
+    sickness = 'v243'
+    injury = 'v237'
+    array = [income, educationLevel, sickness, injury]
+    return array
+
+arrayOfConditions = createArrayOfConditions1973()
+
+print(arrayOfConditions)
+
+dataX = filterOutDatasetsOnListOfConditions(WorkAgeDf1973, arrayOfConditions)
+
+print(dataX)
 
 df1973WorkAgeIncome = readDfAndReturnSeries(WorkAgeDf1973,'v406')
 df2017WorkAgeIncome = readDfAndReturnSeries(WorkAgeDf2017,'wies_su')
@@ -125,14 +154,18 @@ df2017WorkAgeIncome = readDfAndReturnSeries(WorkAgeDf2017,'wies_su')
 IncomeAndEducation1973WorkAge = findIncomeAndEducation(WorkAgeDf1973,'v406' ,'v228')
 
 
+def scaleData(data):
+    lenght = len(data.head())
+    for i in range(0, lenght):
+        scaler = StandardScaler()
+        dataScaled = scaler.fit_transform(data.series[i])
+
 
 X = np.asarray(df1973WorkAgeInomceEducationSicknessInjury)
 
 scaler = StandardScaler()
 
-scaler.fit(X)
-
-X = scaler.transform(X)
+X = scaler.fit_transform(X)
 
 print(scaler.mean_)
 

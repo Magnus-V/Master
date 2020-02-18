@@ -6,7 +6,7 @@ import sys
 import scipy as sp
 import sklearn
 from sklearn.cluster import KMeans
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
 
 
@@ -154,11 +154,22 @@ df2017WorkAgeIncome = readDfAndReturnSeries(WorkAgeDf2017,'wies_su')
 IncomeAndEducation1973WorkAge = findIncomeAndEducation(WorkAgeDf1973,'v406' ,'v228')
 
 
-def scaleData(data):
-    lenght = len(data.head())
-    for i in range(0, lenght):
-        scaler = StandardScaler()
-        dataScaled = scaler.fit_transform(data.series[i])
+def insertDataFrameAndColumnsToMinMaxNormalize(dataFrame, columnsToNormalize):
+    minMaxScaler = MinMaxScaler()
+    x = dataFrame[columnsToNormalize].values
+    x_scaled = minMaxScaler.fit_transform(x)
+    df_temp = pd.DataFrame(x_scaled, columns=columnsToNormalize, index=dataFrame.index)
+    dataFrame[columnsToNormalize] = df_temp
+    return dataFrame
+
+
+def insertDataFrameAndColumnsToStandardScaler(dataFrame, columnsToNormalize):
+    standardScaler = StandardScaler()
+    x = dataFrame[columnsToNormalize].values
+    x_scaled = standardScaler.fit_transform(x)
+    df_temp = pd.DataFrame(x_scaled, columns=columnsToNormalize, index=dataFrame.index)
+    dataFrame[columnsToNormalize] = df_temp
+    return dataFrame
 
 
 X = np.asarray(df1973WorkAgeInomceEducationSicknessInjury)
@@ -178,5 +189,5 @@ y_kmeans = kmeans.predict(X)
 plt.scatter(X[:, 1], X[:, 2], c=y_kmeans, s=50, cmap='viridis')
 
 centers = kmeans.cluster_centers_
-plt.scatter(centers[:, 0], centers[:, 1], c='black', s=200, alpha=0.5);
+plt.scatter(centers[:, 0], centers[:, 1], c='black', s=200, alpha=0.5)
 plt.show()

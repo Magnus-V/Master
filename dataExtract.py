@@ -172,7 +172,12 @@ def insertDataFrameAndColumnsToStandardScaler(dataFrame, columnsToNormalize):
     return dataFrame
 
 
-X = np.asarray(df1973WorkAgeInomceEducationSicknessInjury)
+columnsToEngineer1973 = ['v406', 'v228', 'v243', 'v237']
+
+df1973WorkAgeChosenColumnsStandardized = insertDataFrameAndColumnsToStandardScaler(df1973WorkAgeIncome, columnsToEngineer1973)
+#df1973WorkAgeChosenColumnsNormalized = insertDataFrameAndColumnsToMinMaxNormalize(df1973WorkAgeIncome, columnsToEngineer1973)
+
+X = np.asarray(df1973WorkAgeChosenColumnsNormalized)
 
 scaler = StandardScaler()
 

@@ -6,6 +6,7 @@ import sys
 import scipy as sp
 import sklearn
 from sklearn.cluster import KMeans
+from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
 
@@ -172,27 +173,23 @@ def insertDataFrameAndColumnsToStandardScaler(dataFrame, columnsToNormalize):
     return dataFrame
 
 
-columnsToEngineer1973 = ['v406', 'v228', 'v243', 'v237']
+columnsToEngineer1973 = ['v406','v228','v243','v237', ]
+df1973WorkAgeChosenColumnsStandardized = insertDataFrameAndColumnsToStandardScaler(WorkAgeDf1973, columnsToEngineer1973)
+df1973WorkAgeChosenColumnsNormalized = insertDataFrameAndColumnsToMinMaxNormalize(WorkAgeDf1973, columnsToEngineer1973)
 
-df1973WorkAgeChosenColumnsStandardized = insertDataFrameAndColumnsToStandardScaler(df1973WorkAgeIncome, columnsToEngineer1973)
-#df1973WorkAgeChosenColumnsNormalized = insertDataFrameAndColumnsToMinMaxNormalize(df1973WorkAgeIncome, columnsToEngineer1973)
-
-X = np.asarray(df1973WorkAgeChosenColumnsNormalized)
-
-scaler = StandardScaler()
-
-X = scaler.fit_transform(X)
-
-print(scaler.mean_)
+X = np.asarray(df1973WorkAgeChosenColumnsStandardized)
 
 kmeans = KMeans(n_clusters=3)
-
 kmeans.fit(X)
-
 y_kmeans = kmeans.predict(X)
-
 plt.scatter(X[:, 1], X[:, 2], c=y_kmeans, s=50, cmap='viridis')
-
 centers = kmeans.cluster_centers_
-plt.scatter(centers[:, 0], centers[:, 1], c='black', s=200, alpha=0.5)
+plt.scatter(centers[:, 1], centers[:, 2], c='black', s=200, alpha=0.5)
 plt.show()
+
+
+#PCA
+
+pca = PCA(n_components=2)
+
+# https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy

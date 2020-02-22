@@ -1,4 +1,6 @@
 import os
+
+import mglearn as mglearn
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -101,7 +103,6 @@ def findIncomeAndEducation(dataFrame, firstCondition, secondCondition):
         tempCond2 = row[secondCondition]
         tempArray = [tempCond, tempCond2]
         returnArray.append(tempArray)
-    print(returnArray)
     return returnArray
 
 def filterOutDatasetsOnFourConditions(dataFrame, firstCondition, secondCondition, thirdCondition, fourthCondition):
@@ -113,7 +114,6 @@ def filterOutDatasetsOnFourConditions(dataFrame, firstCondition, secondCondition
         tempCond4 = row[fourthCondition]
         tempArray = [tempCond, tempCond2, tempCond3, tempCond4]
         returnArray.append(tempArray)
-    print(returnArray)
     return returnArray
 
 def filterOutDatasetsOnListOfConditions(dataFrame, listOfConditions):
@@ -123,13 +123,12 @@ def filterOutDatasetsOnListOfConditions(dataFrame, listOfConditions):
         tempArraySingleRow = []
         length = len(listOfConditions)
         for i in range(0, length):
-            print(i)
             tempArraySingleRow = []
             tempCond = row[listOfConditions[i]]
             tempArraySingleRow.append(tempCond)
         tempArray.append(tempArraySingleRow)
-        print(tempArray);
     returnArray.append(tempCond)
+    return returnArray
 
 df1973WorkAgeInomceEducationSicknessInjury = filterOutDatasetsOnFourConditions(WorkAgeDf1973, 'v406', 'v228', 'v243', 'v237')
 
@@ -172,24 +171,52 @@ def insertDataFrameAndColumnsToStandardScaler(dataFrame, columnsToNormalize):
     dataFrame[columnsToNormalize] = df_temp
     return dataFrame
 
+def insertDataFrameToScale(dataFrame):
+    standardScaler = StandardScaler()
+    x = dataFrame.values
+    x_scaled = standardScaler.fit_transform(x)
+    df_temp = pd.DataFrame(x_scaled, index=dataFrame.index)
+    return df_temp
+
+def insertDataFrameAndNormalize(dataFrame):
+    minMaxScaler = MinMaxScaler()
+    x = dataFrame.values
+    x_normalized = minMaxScaler.fit_transform(x)
+    df_temp = pd.DataFrame(x_normalized, index=dataFrame.index)
+    return df_temp
 
 columnsToEngineer1973 = ['v406','v228','v243','v237', ]
-df1973WorkAgeChosenColumnsStandardized = insertDataFrameAndColumnsToStandardScaler(WorkAgeDf1973, columnsToEngineer1973)
-df1973WorkAgeChosenColumnsNormalized = insertDataFrameAndColumnsToMinMaxNormalize(WorkAgeDf1973, columnsToEngineer1973)
+#df1973WorkAgeChosenColumnsStandardized = insertDataFrameAndColumnsToStandardScaler(WorkAgeDf1973, columnsToEngineer1973)
+#df1973WorkAgeChosenColumnsNormalized = insertDataFrameAndColumnsToMinMaxNormalize(WorkAgeDf1973, columnsToEngineer1973)
 
-X = np.asarray(df1973WorkAgeChosenColumnsStandardized)
+#X = np.asarray(df1973WorkAgeChosenColumnsStandardized)
 
-kmeans = KMeans(n_clusters=3)
-kmeans.fit(X)
-y_kmeans = kmeans.predict(X)
-plt.scatter(X[:, 1], X[:, 2], c=y_kmeans, s=50, cmap='viridis')
-centers = kmeans.cluster_centers_
-plt.scatter(centers[:, 1], centers[:, 2], c='black', s=200, alpha=0.5)
-plt.show()
+df1973AllStandard = insertDataFrameToScale(WorkAgeDf1973)
+df1973AllNormalized = insertDataFrameAndNormalize(WorkAgeDf1973)
+
+X = np.asarray(df1973AllNormalized)
+
+#kmeans = KMeans(n_clusters=3)
+#kmeans.fit(X)
+#y_kmeans = kmeans.predict(X)
+#plt.scatter(X[:, 1], X[:, 2], c=y_kmeans, s=50, cmap='viridis')
+#centers = kmeans.cluster_centers_
+#plt.scatter(centers[:, 1], centers[:, 2], c='black', s=200, alpha=0.5)
+#plt.show()
 
 
 #PCA
 
 pca = PCA(n_components=2)
+result = pca.fit_transform(X)
+
+
+print("Orignal shape: {}".format(str(X.shape)))
+print("Reduced shape: {}".format(str(result.shape)))
+
+plt.figure(figsize=(8, 8))
+mglearn.discrete_scatter(result[:, 0], result[:, 1])
+plt.show()
+
 
 # https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy

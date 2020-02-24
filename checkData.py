@@ -188,7 +188,6 @@ def storeInDictionary(dataFrame, seriesName):
 
 #storeInDictionary(df2017, 'wies_3')
 
-
 #print(createArrayWithAverageValues(df2017, 'wies_3'))
 
 def createArrayForThoseWithHigherPayAndTheirAverageValues():

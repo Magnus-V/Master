@@ -137,7 +137,17 @@ def createArrayOfConditions1973():
     educationLevel = 'v228'
     sickness = 'v243'
     injury = 'v237'
-    array = [income, educationLevel, sickness, injury]
+    maritalStatus = 'v146'
+    numberOfChildren = 'v149'
+    housingPopDensity = 'v205'
+    workType = 'v005'
+    vacationFromHousework = 'v142'
+    vacationOverFourWeeks = 'v073'
+    sex = 'v372'
+    recievesDisabilityPay = 'v008'
+
+    array = [income, educationLevel, sickness, injury, maritalStatus, numberOfChildren, housingPopDensity, workType,
+             vacationFromHousework, vacationOverFourWeeks, sex, recievesDisabilityPay,]
     return array
 
 arrayOfConditions = createArrayOfConditions1973()
@@ -184,35 +194,5 @@ def insertDataFrameAndNormalize(dataFrame):
     x_normalized = minMaxScaler.fit_transform(x)
     df_temp = pd.DataFrame(x_normalized, index=dataFrame.index)
     return df_temp
-
-columnsToEngineer1973 = ['v406','v228','v243','v237', ]
-#df1973WorkAgeChosenColumnsStandardized = insertDataFrameAndColumnsToStandardScaler(WorkAgeDf1973, columnsToEngineer1973)
-#df1973WorkAgeChosenColumnsNormalized = insertDataFrameAndColumnsToMinMaxNormalize(WorkAgeDf1973, columnsToEngineer1973)
-
-#X = np.asarray(df1973WorkAgeChosenColumnsStandardized)
-
-df1973AllStandard = insertDataFrameToScale(WorkAgeDf1973)
-df1973AllNormalized = insertDataFrameAndNormalize(WorkAgeDf1973)
-
-x_scaled = np.asarray(df1973AllNormalized)
-
-def runKMeansOnScaledData(data):
-    kmeans = KMeans(n_clusters=3)
-    y_kmeans = kmeans.fit_predict(data)
-    plt.scatter(data[:, 1], data[:, 2], c=y_kmeans, s=50, cmap='viridis')
-    centers = kmeans.cluster_centers_
-    plt.scatter(centers[:, 1], centers[:, 2], c='black', s=200, alpha=0.5)
-    plt.show()
-
-runKMeansOnScaledData(x_scaled)
-
-def runPCAAnalysisOnScaledData(data):
-    pca = PCA(n_components=2)
-    x_pca = pca.fit_transform(data)
-    print("Orignal shape: {}".format(str(x_scaled.shape)))
-    print("Reduced shape: {}".format(str(x_pca.shape)))
-    plt.figure(figsize=(8, 8))
-    mglearn.discrete_scatter(x_pca[:, 0], x_pca[:, 1])
-    plt.show()
 
 # https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy

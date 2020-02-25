@@ -12,7 +12,6 @@ from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
 
-
 def runPCAAnalysisOnScaledData(data):
     pca = PCA(n_components=2)
     x_pca = pca.fit_transform(data)

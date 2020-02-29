@@ -132,24 +132,6 @@ def filterOutDatasetsOnListOfConditions(dataFrame, listOfConditions):
 
 df1973WorkAgeInomceEducationSicknessInjury = filterOutDatasetsOnFourConditions(WorkAgeDf1973, 'v406', 'v228', 'v243', 'v237')
 
-def createArrayOfConditions1973():
-    income = 'v406'
-    educationLevel = 'v228'
-    sickness = 'v243'
-    injury = 'v237'
-    maritalStatus = 'v146'
-    numberOfChildren = 'v149'
-    housingPopDensity = 'v205'
-    workType = 'v005'
-    vacationFromHousework = 'v142'
-    vacationOverFourWeeks = 'v073'
-    sex = 'v372'
-    recievesDisabilityPay = 'v008'
-
-    array = [income, educationLevel, sickness, injury, maritalStatus, numberOfChildren, housingPopDensity, workType,
-             vacationFromHousework, vacationOverFourWeeks, sex, recievesDisabilityPay,]
-    return array
-
 arrayOfConditions = createArrayOfConditions1973()
 
 print(arrayOfConditions)

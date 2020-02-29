@@ -73,7 +73,7 @@ def createArrayOfConditions2005():
     heightCm = 'v0375'
 
     array = [income, educationLevel, sicknessLongTerm, injuryLast12Months, maritalStatus, familyPhase,
-             numberOfChildren6to15, numberOfChildren0to5, housingPopDensity, typeOfHousehold workType,
+             numberOfChildren6to15, numberOfChildren0to5, housingPopDensity, typeOfHousehold, workType,
              sex, degreeOfDisability, weightKg, heightCm]
     return array
 
@@ -95,7 +95,7 @@ def createArrayOfConditions2015():
     heightCm = 'v0375'
 
     array = [income, educationLevel, sicknessLongTerm, injuryLast12Months, maritalStatus, familyPhase,
-             numberOfChildren6to15, numberOfChildren0to5, housingPopDensity, typeOfHousehold workType,
+             numberOfChildren6to15, numberOfChildren0to5, housingPopDensity, typeOfHousehold, workType,
              sex, degreeOfDisability, weightKg, heightCm]
     return array
 
@@ -117,6 +117,6 @@ def createArrayOfConditions2017():
     heightCm = 'v0375'
 
     array = [income, educationLevel, sicknessLongTerm, injuryLast12Months, maritalStatus, familyPhase,
-             numberOfChildren6to15, numberOfChildren0to5, housingPopDensity, typeOfHousehold workType,
+             numberOfChildren6to15, numberOfChildren0to5, housingPopDensity, typeOfHousehold, workType,
              sex, degreeOfDisability, weightKg, heightCm]
     return array

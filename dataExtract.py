@@ -1,5 +1,5 @@
 import os
-
+import columnsToEngineer
 import mglearn as mglearn
 import pandas as pd
 import numpy as np
@@ -129,22 +129,6 @@ def filterOutDatasetsOnListOfConditions(dataFrame, listOfConditions):
         tempArray.append(tempArraySingleRow)
     returnArray.append(tempCond)
     return returnArray
-
-df1973WorkAgeInomceEducationSicknessInjury = filterOutDatasetsOnFourConditions(WorkAgeDf1973, 'v406', 'v228', 'v243', 'v237')
-
-arrayOfConditions = createArrayOfConditions1973()
-
-print(arrayOfConditions)
-
-dataX = filterOutDatasetsOnListOfConditions(WorkAgeDf1973, arrayOfConditions)
-
-print(dataX)
-
-df1973WorkAgeIncome = readDfAndReturnSeries(WorkAgeDf1973,'v406')
-df2017WorkAgeIncome = readDfAndReturnSeries(WorkAgeDf2017,'wies_su')
-
-IncomeAndEducation1973WorkAge = findIncomeAndEducation(WorkAgeDf1973,'v406' ,'v228')
-
 
 def insertDataFrameAndColumnsToMinMaxNormalize(dataFrame, columnsToNormalize):
     minMaxScaler = MinMaxScaler()

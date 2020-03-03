@@ -4,16 +4,16 @@ import PCA
 import columnsToEngineer
 import numpy as np
 
-
 def main():
-    df1973 = dataExtract.readCSVSurveyConvertToDataFrame(dataExtract.LivingConditionsSurvey1973)
-    df1983 = dataExtract.readCSVSurveyConvertToDataFrame(dataExtract.livingConditionsSurvey1983)
-    df1987 = dataExtract.readCSVSurveyConvertToDataFrame(dataExtract.LivingConditionsSurvey1987)
-    df2017 = dataExtract.readCSVSurveyConvertToDataFrame(dataExtract.EUSILC2017)
-    WorkAgeDf1973 = dataExtract.filterWorkingAgeGroups(df1973, 'v002', 24, 64)
-    WorkAgeDf1983 = dataExtract.filterWorkingAgeGroups(df1983, 'V10', 59, 19)
-    WorkAgeDf1987 = dataExtract.filterWorkingAgeGroups(df1987, 'V6', 1963, 1923)
-    WorkAgeDf2017 = dataExtract.filterWorkingAgeGroups(df2017, 'alder_1', 24, 64)
+
+    WorkAgeDf1973 = dataExtract.filterWorkingAgeGroups(dataExtract.df1973, 'v002', 24, 64)
+    WorkAgeDf1983 = dataExtract.filterWorkingAgeGroups(dataExtract.df1983, 'V10', 59, 19)
+    WorkAgeDf1987 = dataExtract.filterWorkingAgeGroups(dataExtract.df1987, 'V6', 1963, 1923)
+
+    listOfDataFramesLower = dataExtract.writeHeadersToLowerCaseOnly(dataExtract.listOfDataFrames)
+    arrayWithDataframesWithWorkingAgeGroups = dataExtract.filterListWorkingAgeGroups(listOfDataFramesLower, 'alder_1', 'v315', 24, 64)
+
+    print(arrayWithDataframesWithWorkingAgeGroups)
     columnsToEngineer1973 = columnsToEngineer.createArrayOfConditions1973()
 
     df1973WorkAgeChosenColumnsStandardized = dataExtract.insertDataFrameAndColumnsToStandardScaler(WorkAgeDf1973, columnsToEngineer1973)

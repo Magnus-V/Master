@@ -98,6 +98,27 @@ def createArrayOfConditions2015():
              sex, DisabilityPayment]
     return array
 
+def createArrayOfConditions2016():
+    income = 'saminnt_su'
+    educationLevel = 'utdnivaa'
+    sicknessLongTerm = 'hels2a'
+    injuryLast12Months = 'hels2b'
+    familyPhase = 'fam_fase'
+    maritalStatus = 'sivstat_1'
+    numberOfChildren0to16 = 'antbarn'
+    housingPopDensity = 'ts_stor'
+    county = 'LANDSDEL'
+    currentMainActivity = 'naa_1'
+    sex = 'KJONN_1'
+    DisabilityPayment = 'bel21_8_1'
+    weightKg = 'bm2'
+    heightCm = 'bm1'
+
+    array = [income, educationLevel, sicknessLongTerm, injuryLast12Months, maritalStatus, familyPhase,
+             numberOfChildren0to16, housingPopDensity, county, currentMainActivity,
+             sex, DisabilityPayment, weightKg, heightCm]
+    return array
+
 def createArrayOfConditions2017():
     income = 'saminnt_su'
     educationLevel = 'utdnivaa'

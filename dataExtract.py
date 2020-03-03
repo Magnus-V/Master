@@ -64,6 +64,8 @@ EUSILC2017 = os.path.join(my_data_folder, r'LivingConditionsSurveyEUSILC2017.csv
 EUSILC2018 = os.path.join(my_data_folder, r'LivingConditionsSurveyEUSILC2018.csv')
 
 
+
+
 def readCSVSurvey(csvfile):
     readCSV = pd.read_csv(csvfile, low_memory=False)
     return readCSV
@@ -75,22 +77,48 @@ def readCSVSurveyConvertToDataFrame(csvfile):
     return df_readCSV
 
 
-df1973 = readCSVSurveyConvertToDataFrame(LivingConditionsSurvey1973)
-df2017 = readCSVSurveyConvertToDataFrame(EUSILC2017)
-
-
 def readDfAndReturnSeries(dataFrame, Seriesname):
     tempDataSeries = dataFrame[Seriesname]
     return tempDataSeries
 
+df1973 = readCSVSurveyConvertToDataFrame(LivingConditionsSurvey1973)
+df1983 = readCSVSurveyConvertToDataFrame(LivingConditionsSurvey1983)
+df1987 = readCSVSurveyConvertToDataFrame(LivingConditionsSurvey1987)
 
-df1973income = readDfAndReturnSeries(df1973, 'v406')
-df2017income = readDfAndReturnSeries(df2017, 'wies_su')
+df2011 = readCSVSurveyConvertToDataFrame(EUSILC2011)
+df2012 = readCSVSurveyConvertToDataFrame(EUSILC2012)
+df2013 = readCSVSurveyConvertToDataFrame(EUSILC2013)
+df2014 = readCSVSurveyConvertToDataFrame(EUSILC2014)
+df2015 = readCSVSurveyConvertToDataFrame(EUSILC2015)
+df2016 = readCSVSurveyConvertToDataFrame(EUSILC2016)
+df2017 = readCSVSurveyConvertToDataFrame(EUSILC2017)
+df2018 = readCSVSurveyConvertToDataFrame(EUSILC2018)
 
+listOfDataFrames = [df2011, df2012, df2013, df2014, df2015, df2016, df2017, df2018]
+
+def writeHeadersToLowerCaseOnly(listOfDataFrames):
+    returnList = []
+    for dataFrame in listOfDataFrames:
+        dataFrame.columns = dataFrame.columns.str.lower()
+        returnList.append(dataFrame)
+    return returnList
+
+listOfDataFramesLower = writeHeadersToLowerCaseOnly(listOfDataFrames)
 
 def filterWorkingAgeGroups(dataFrame, filter, minAge, maxAge):
     tempDataSeries = dataFrame[(dataFrame[filter] > minAge) & (dataFrame[filter] < maxAge)]
     return tempDataSeries
+
+def filterListWorkingAgeGroups(listOfDataFrame, filter, excfilter, minAge, maxAge):
+    returnArray = []
+    for dataFrame in listOfDataFrame:
+        try:
+            tempDataFrame = dataFrame[(dataFrame[filter] > minAge) & (dataFrame[filter] < maxAge)]
+        except:
+            tempDataFrame = dataFrame[(dataFrame[excfilter] > minAge) & (dataFrame[excfilter] < maxAge)]
+        returnArray.append(tempDataFrame)
+    return returnArray
+
 
 WorkAgeDf1973 = filterWorkingAgeGroups(df1973, 'v002', 24, 64)
 WorkAgeDf2017 = filterWorkingAgeGroups(df2017, 'alder_1', 24, 64)

@@ -109,9 +109,9 @@ def filterWorkingAgeGroups(dataFrame, filter, minAge, maxAge):
     tempDataSeries = dataFrame[(dataFrame[filter] > minAge) & (dataFrame[filter] < maxAge)]
     return tempDataSeries
 
-def filterListWorkingAgeGroups(listOfDataFrame, filter, excfilter, minAge, maxAge):
+def filterListWorkingAgeGroups(listOfDataFrames, filter, excfilter, minAge, maxAge):
     returnArray = []
-    for dataFrame in listOfDataFrame:
+    for dataFrame in listOfDataFrames:
         try:
             tempDataFrame = dataFrame[(dataFrame[filter] > minAge) & (dataFrame[filter] < maxAge)]
         except:
@@ -144,7 +144,7 @@ def filterOutDatasetsOnFourConditions(dataFrame, firstCondition, secondCondition
         returnArray.append(tempArray)
     return returnArray
 
-def filterOutDatasetsOnListOfConditions(dataFrame, listOfConditions):
+def filterOutDatasetOnListOfConditions(dataFrame, listOfConditions):
     returnArray = []
     for index, row in dataFrame.iterrows():
         tempArray = []
@@ -155,8 +155,26 @@ def filterOutDatasetsOnListOfConditions(dataFrame, listOfConditions):
             tempCond = row[listOfConditions[i]]
             tempArraySingleRow.append(tempCond)
         tempArray.append(tempArraySingleRow)
-    returnArray.append(tempCond)
+    returnArray.append(tempArray)
     return returnArray
+
+def filterOutArrayOfDatasetsOnArrayOfConditions(arrayOfDataFrames, arrayOfConditions):
+    returnArrayOfDataframes = []
+    for dataFrame in arrayOfDataFrames:
+        returnArray = []
+        for index, row in dataFrame.iterrows():
+            tempArray = []
+            tempArraySingleRow = []
+            length = len(arrayOfConditions)
+            for i in range(0, length):
+                tempArraySingleRow = []
+                tempCond = row[arrayOfConditions[i]]
+                tempArraySingleRow.append(tempCond)
+            tempArray.append(tempArraySingleRow)
+        returnArray.append(tempArray)
+    returnArrayOfDataframes.append(returnArray)
+    return returnArrayOfDataframes
+
 
 def insertDataFrameAndColumnsToMinMaxNormalize(dataFrame, columnsToNormalize):
     minMaxScaler = MinMaxScaler()

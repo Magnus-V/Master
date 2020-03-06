@@ -12,7 +12,10 @@ from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from sklearn.feature_selection import SelectPercentile
 from sklearn.model_selection import train_test_split
 
-def selectKBestUsingData():
+def split_train_test(dataFrame):
+    return
+
+def selectKBestUsingData(X_train, x_test):
     select = SelectPercentile(percentile=50)
     select.fit()
     X_train_selected = select.transform(X_train)

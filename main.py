@@ -6,12 +6,14 @@ import numpy as np
 
 def main():
 
-    WorkAgeDf1973 = dataExtract.filterWorkingAgeGroups(dataExtract.df1973, 'v002', 24, 64)
-    WorkAgeDf1983 = dataExtract.filterWorkingAgeGroups(dataExtract.df1983, 'V10', 59, 19)
-    WorkAgeDf1987 = dataExtract.filterWorkingAgeGroups(dataExtract.df1987, 'V6', 1963, 1923)
+    #WorkAgeDf1973 = dataExtract.filterWorkingAgeGroups(dataExtract.df1973, 'v002', 24, 64)
+    #WorkAgeDf1983 = dataExtract.filterWorkingAgeGroups(dataExtract.df1983, 'V10', 59, 19)
+    #WorkAgeDf1987 = dataExtract.filterWorkingAgeGroups(dataExtract.df1987, 'V6', 1963, 1923)
 
     listOfDataFramesLower = dataExtract.writeHeadersToLowerCaseOnly(dataExtract.listOfDataFrames)
     arrayWithDataframesWithWorkingAgeGroups = dataExtract.filterListWorkingAgeGroups(listOfDataFramesLower, 'alder_1', 'v315', 24, 64)
+
+
 
     print(arrayWithDataframesWithWorkingAgeGroups)
     columnsToEngineer1973 = columnsToEngineer.createArrayOfConditions1973()

@@ -94,16 +94,22 @@ df2016 = readCSVSurveyConvertToDataFrame(EUSILC2016)
 df2017 = readCSVSurveyConvertToDataFrame(EUSILC2017)
 df2018 = readCSVSurveyConvertToDataFrame(EUSILC2018)
 
-listOfDataFrames = [df2011, df2012, df2013, df2014, df2015, df2016, df2017, df2018]
+listOfDataFrames = [df2012, df2013, df2014, df2015, df2016, df2017, df2018]
 
-def writeHeadersToLowerCaseOnly(listOfDataFrames):
+
+def writeHeadersToLowerCaseOnly(dataFrame):
+    dataFrame.columns = dataFrame.columns.str.lower()
+    return dataFrame
+
+
+def writeArrayOfDataFramesHeadersToLowerCaseOnly(arrayOfDataFrames):
     returnList = []
-    for dataFrame in listOfDataFrames:
+    for dataFrame in arrayOfDataFrames:
         dataFrame.columns = dataFrame.columns.str.lower()
         returnList.append(dataFrame)
     return returnList
 
-listOfDataFramesLower = writeHeadersToLowerCaseOnly(listOfDataFrames)
+listOfDataFramesLower = writeArrayOfDataFramesHeadersToLowerCaseOnly(listOfDataFrames)
 
 def filterWorkingAgeGroups(dataFrame, filter, minAge, maxAge):
     tempDataSeries = dataFrame[(dataFrame[filter] > minAge) & (dataFrame[filter] < maxAge)]
@@ -174,7 +180,6 @@ def filterOutArrayOfDatasetsOnArrayOfConditions(arrayOfDataFrames, arrayOfCondit
         returnArray.append(tempArray)
     returnArrayOfDataframes.append(returnArray)
     return returnArrayOfDataframes
-
 
 def insertDataFrameAndColumnsToMinMaxNormalize(dataFrame, columnsToNormalize):
     minMaxScaler = MinMaxScaler()

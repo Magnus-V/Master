@@ -78,19 +78,41 @@ def createArrayOfConditions2005():
              sex, degreeOfDisability, weightKg, heightCm]
     return array
 
+
+def createArrayOfConditions2014():
+    income = 'aggi_18_su'
+    educationLevel = 'utdnivaa_nus2000_1'
+    sicknessLongTerm = 'hels2a'
+    injuryLast12Months = 'hels2b'
+    familyPhase = 'fam_fase'
+    maritalStatus = 'sivsta_1'
+    numberOfChildren0to16 = 'antbarn'
+    housingPopDensity = 'ts_stor'
+    county = 'landsdel'
+    currentMainActivity = 'arb14_1'
+    sex = 'kjonn_1'
+    DisabilityPayment = 'kode218_su'
+
+
+    array = [income, educationLevel, sicknessLongTerm, injuryLast12Months, maritalStatus, familyPhase,
+             numberOfChildren0to16, housingPopDensity, county, currentMainActivity,
+             sex, DisabilityPayment]
+    return array
+
+
 def createArrayOfConditions2015():
-    income = 'Saminnt_su'
-    educationLevel = 'Utdnivaa'
-    sicknessLongTerm = 'Hels2a'
-    injuryLast12Months = 'Hels2b'
-    familyPhase = 'Fam_fase'
-    maritalStatus = 'Sivstat_1'
-    numberOfChildren0to16 = 'Antbarn'
-    housingPopDensity = 'Ts_stor'
-    county = 'Landsdel'
-    currentMainActivity = 'Naa_1'
-    sex = 'Kjonn_1'
-    DisabilityPayment = 'Bel21_8_1'
+    income = 'aggi_18_su'
+    educationLevel = 'utdnivaa'
+    sicknessLongTerm = 'hels2a'
+    injuryLast12Months = 'hels2b'
+    familyPhase = 'fam_fase'
+    maritalStatus = 'sivstat_1'
+    numberOfChildren0to16 = 'antbarn'
+    housingPopDensity = 'ts_stor'
+    county = 'landsdel'
+    currentMainActivity = 'naa_1'
+    sex = 'kjonn_1'
+    DisabilityPayment = 'kode218'
 
 
     array = [income, educationLevel, sicknessLongTerm, injuryLast12Months, maritalStatus, familyPhase,
@@ -107,16 +129,14 @@ def createArrayOfConditions2016():
     maritalStatus = 'sivstat_1'
     numberOfChildren0to16 = 'antbarn'
     housingPopDensity = 'ts_stor'
-    county = 'LANDSDEL'
+    county = 'landsdel'
     currentMainActivity = 'naa_1'
-    sex = 'KJONN_1'
+    sex = 'kjonn_1'
     DisabilityPayment = 'bel21_8_1'
-    weightKg = 'bm2'
-    heightCm = 'bm1'
 
     array = [income, educationLevel, sicknessLongTerm, injuryLast12Months, maritalStatus, familyPhase,
              numberOfChildren0to16, housingPopDensity, county, currentMainActivity,
-             sex, DisabilityPayment, weightKg, heightCm]
+             sex, DisabilityPayment]
     return array
 
 def createArrayOfConditions2017():

@@ -3,46 +3,54 @@ import kmeans
 import PCA
 import columnsToEngineer
 import numpy as np
+import pandas as pd
 
 def main():
-
-    #WorkAgeDf1973 = dataExtract.filterWorkingAgeGroups(dataExtract.df1973, 'v002', 24, 64)
-    #WorkAgeDf1983 = dataExtract.filterWorkingAgeGroups(dataExtract.df1983, 'V10', 59, 19)
-    #WorkAgeDf1987 = dataExtract.filterWorkingAgeGroups(dataExtract.df1987, 'V6', 1963, 1923)
-
-    df2011 = dataExtract.df2011
-    df2012 = dataExtract.df2012
-    df2013 = dataExtract.df2013
-    df2014 = dataExtract.df2014
-    df2015 = dataExtract.df2015
-    df2016 = dataExtract.df2016
-    df2017 = dataExtract.df2017
-    df2018 = dataExtract.df2018
-
-
-
-
-    #df2011filtered = dataExtract.filterOutDatasetOnListOfConditions(dataExtract.df2011, columnsToEngineer.createArrayOfConditions2017())
-    #df2012filtered = dataExtract.filterOutDatasetOnListOfConditions(dataExtract.df2012, columnsToEngineer.createArrayOfConditions2017())
-    #df2013filtered = dataExtract.filterOutDatasetOnListOfConditions(dataExtract.df2013, columnsToEngineer.createArrayOfConditions2017())
+    df2012filtered = dataExtract.filterOutDatasetOnListOfConditions(dataExtract.df2012, columnsToEngineer.createArrayOfConditions2014())
+    df2013filtered = dataExtract.filterOutDatasetOnListOfConditions(dataExtract.df2013, columnsToEngineer.createArrayOfConditions2014())
     df2014filtered = dataExtract.filterOutDatasetOnListOfConditions(dataExtract.df2014, columnsToEngineer.createArrayOfConditions2014())
     df2015filtered = dataExtract.filterOutDatasetOnListOfConditions(dataExtract.df2015, columnsToEngineer.createArrayOfConditions2015())
     df2016filtered = dataExtract.filterOutDatasetOnListOfConditions(dataExtract.df2016, columnsToEngineer.createArrayOfConditions2016())
     df2017filtered = dataExtract.filterOutDatasetOnListOfConditions(dataExtract.df2017, columnsToEngineer.createArrayOfConditions2017())
-    #df2018filtered = dataExtract.filterOutDatasetOnListOfConditions(dataExtract.df2018, columnsToEngineer.createArrayOfConditions2017())
 
-    #listOfDataFramesLower = dataExtract.writeHeadersToLowerCaseOnly(dataExtract.listOfDataFrames)
-    #arrayWithDataframesWithWorkingAgeGroups = dataExtract.filterListWorkingAgeGroups(listOfDataFramesLower, 'alder_1', 'v315', 24, 64)
-    columnsToEngineer2017 = columnsToEngineer.createArrayOfConditions2017()
+    listOfDataFrames = [df2012filtered, df2013filtered, df2014filtered, df2015filtered, df2016filtered, df2017filtered]
 
-
-    #dfarray = dataExtract.filterOutArrayOfDatasetsOnArrayOfConditions(arrayWithDataframesWithWorkingAgeGroups, columnsToEngineer2017)
+    df2012filtered = dataExtract.removeDropEmptyRows(df2012filtered, 'utdnivaa_nus2000_1')
+    df2013filtered = dataExtract.removeDropEmptyRows(df2013filtered, 'utdnivaa_nus2000_1')
+    df2014filtered = dataExtract.removeDropEmptyRows(df2014filtered, 'utdnivaa_nus2000_1')
 
 
-    columnsToEngineer1973 = columnsToEngineer.createArrayOfConditions1973()
+
+    listOfDataFrames = [df2012filtered, df2013filtered, df2014filtered, df2015filtered, df2016filtered, df2017filtered]
+
+    dfTotal = pd.concat(listOfDataFrames, ignore_index=True)
+
+    dfTotal.aargang.fillna(dfTotal.aar, inplace=True)
+    dfTotal.sivstat_1.fillna(dfTotal.sivsta_1, inplace=True)
+    dfTotal['utdnivaa1'] = dfTotal['utdnivaa_nus2000_1'].astype(str).str[:1].astype(int)
+    dfTotal.utdnivaa.fillna(dfTotal.utdnivaa1, inplace=True)
+
+    dfTotal = dfTotal.drop(columns='sivsta_1')
+    dfTotal = dfTotal.drop(columns='aar')
+    dfTotal = dfTotal.drop(columns='utdnivaa1')
+    dfTotal = dfTotal.drop(columns='utdnivaa_nus2000_1')
+
+
+    print(dfTotal)
+
+    df2012WorkAge = dataExtract.filterWorkingAgeGroups(df2012filtered, 'alder_1', 24, 64)
+    df2013WorkAge = dataExtract.filterWorkingAgeGroups(df2013filtered, 'alder_1', 24, 64)
+    df2014WorkAge = dataExtract.filterWorkingAgeGroups(df2014filtered, 'alder_1', 24, 64)
+    df2015WorkAge = dataExtract.filterWorkingAgeGroups(df2015filtered, 'alder_1', 24, 64)
+    df2016WorkAge = dataExtract.filterWorkingAgeGroups(df2016filtered, 'alder_1', 24, 64)
+    df2017WorkAge = dataExtract.filterWorkingAgeGroups(df2017filtered, 'alder_1', 24, 64)
+
+
+
 
     #df1973WorkAgeChosenColumnsStandardized = dataExtract.insertDataFrameAndColumnsToStandardScaler(WorkAgeDf1973, columnsToEngineer1973)
     #df1973WorkAgeChosenColumnsNormalized = dataExtract.insertDataFrameAndColumnsToMinMaxNormalize(WorkAgeDf1973, columnsToEngineer1973)
+
 
     #df1973AllStandard = dataExtract.insertDataFrameToScale(WorkAgeDf1973)
     #df1973AllNormalized = dataExtract.insertDataFrameAndNormalize(WorkAgeDf1973)

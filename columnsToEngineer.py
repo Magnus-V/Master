@@ -83,7 +83,7 @@ def createArrayOfConditions2005():
 def createArrayOfConditions2014():
     surveyYear = 'aargang'
     age = 'alder_1'
-    income = 'aggi_18_su'
+    income = 'aggi_18_1'
     educationLevel = 'utdnivaa_nus2000_1'
     sicknessLongTerm = 'hels2a'
     injuryLast12Months = 'hels2b'
@@ -94,7 +94,7 @@ def createArrayOfConditions2014():
     county = 'landsdel'
     currentMainActivity = 'arb14_1'
     sex = 'kjonn_1'
-    DisabilityPayment = 'kode218_su'
+    DisabilityPayment = 'kode218_1'
 
 
     array = [surveyYear, age, income, educationLevel, sicknessLongTerm, injuryLast12Months, maritalStatus, familyPhase,
@@ -106,7 +106,7 @@ def createArrayOfConditions2014():
 def createArrayOfConditions2015():
     surveyYear = 'aargang'
     age = 'alder_1'
-    income = 'aggi_18_su'
+    income = 'aggi_18_1'
     educationLevel = 'utdnivaa'
     sicknessLongTerm = 'hels2a'
     injuryLast12Months = 'hels2b'
@@ -117,7 +117,7 @@ def createArrayOfConditions2015():
     county = 'landsdel'
     currentMainActivity = 'naa_1'
     sex = 'kjonn_1'
-    DisabilityPayment = 'kode218'
+    DisabilityPayment = 'kode218_1'
 
 
     array = [surveyYear, age, income, educationLevel, sicknessLongTerm, injuryLast12Months, maritalStatus, familyPhase,
@@ -128,7 +128,7 @@ def createArrayOfConditions2015():
 def createArrayOfConditions2016():
     surveyYear = 'aargang'
     age = 'alder_1'
-    income = 'saminnt_su'
+    income = 'saminnt_1'
     educationLevel = 'utdnivaa'
     sicknessLongTerm = 'hels2a'
     injuryLast12Months = 'hels2b'
@@ -149,7 +149,7 @@ def createArrayOfConditions2016():
 def createArrayOfConditions2017():
     surveyYear = 'aar'
     age = 'alder_1'
-    income = 'saminnt_su'
+    income = 'saminnt_1'
     educationLevel = 'utdnivaa'
     sicknessLongTerm = 'hels2a'
     injuryLast12Months = 'hels2b'
@@ -172,7 +172,7 @@ def createArrayOfConditions2017():
 def createArrayOfConditions2018():
     surveyYear = 'aar'
     age = 'alder_1'
-    income = 'saminnt_su'
+    income = 'saminnt_1'
     educationLevel = 'utdnivaa'
     sicknessLongTerm = 'hels2a'
     injuryLast12Months = 'hels2b'

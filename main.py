@@ -19,24 +19,27 @@ def main():
     df2013filtered = dataExtract.removeDropEmptyRows(df2013filtered, 'utdnivaa_nus2000_1')
     df2014filtered = dataExtract.removeDropEmptyRows(df2014filtered, 'utdnivaa_nus2000_1')
 
-
-
     listOfDataFrames = [df2012filtered, df2013filtered, df2014filtered, df2015filtered, df2016filtered, df2017filtered]
 
     dfTotal = pd.concat(listOfDataFrames, ignore_index=True)
 
     dfTotal.aargang.fillna(dfTotal.aar, inplace=True)
     dfTotal.sivstat_1.fillna(dfTotal.sivsta_1, inplace=True)
-    dfTotal['utdnivaa1'] = dfTotal['utdnivaa_nus2000_1'].astype(str).str[:1].astype(int)
+    dfTotal['utdnivaa1'] = dfTotal['utdnivaa_nus2000_1'].str[:1]
     dfTotal.utdnivaa.fillna(dfTotal.utdnivaa1, inplace=True)
+    dfTotal.saminnt_1.fillna(dfTotal.aggi_18_1, inplace=True)
+    dfTotal.kode218_1.fillna(dfTotal.bel21_8_1, inplace=True)
 
+    dfTotal = dfTotal.drop(columns='bel21_8_1')
+    dfTotal = dfTotal.drop(columns='aggi_18_1')
     dfTotal = dfTotal.drop(columns='sivsta_1')
     dfTotal = dfTotal.drop(columns='aar')
     dfTotal = dfTotal.drop(columns='utdnivaa1')
     dfTotal = dfTotal.drop(columns='utdnivaa_nus2000_1')
 
+    for column in dfTotal.columns:
+        print(column)
 
-    print(dfTotal)
 
     df2012WorkAge = dataExtract.filterWorkingAgeGroups(df2012filtered, 'alder_1', 24, 64)
     df2013WorkAge = dataExtract.filterWorkingAgeGroups(df2013filtered, 'alder_1', 24, 64)

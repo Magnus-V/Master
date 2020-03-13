@@ -14,9 +14,9 @@ from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
 
 # Bærbare
-my_data_folder = os.path.dirname(r'C:\Users\Magnus\Documents\MasterProg\AmazonWebServices\survey_on_income_and_living_conditions\\')
+#my_data_folder = os.path.dirname(r'C:\Users\Magnus\Documents\MasterProg\AmazonWebServices\survey_on_income_and_living_conditions\\')
 # Stasjonære
-#my_data_folder = os.path.dirname(r'C:\Users\Magnus L. Vestby\Documents\Universitetsarbeid\MasterProg\INFO390\LivingConditionsSurvey\\')
+my_data_folder = os.path.dirname(r'C:\Users\Magnus L. Vestby\Documents\Universitetsarbeid\Master\INFO390\survey_on_income_and_living_conditions\\')
 
 
 # Surveys predating 1996

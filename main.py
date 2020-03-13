@@ -37,10 +37,7 @@ def main():
     dfTotal = dfTotal.drop(columns='utdnivaa1')
     dfTotal = dfTotal.drop(columns='utdnivaa_nus2000_1')
 
-    for column in dfTotal.columns:
-        print(column)
-
-
+    dfTotalWorkAge = dataExtract.filterWorkingAgeGroups(dfTotal, 'alder_1', 24, 64)
     df2012WorkAge = dataExtract.filterWorkingAgeGroups(df2012filtered, 'alder_1', 24, 64)
     df2013WorkAge = dataExtract.filterWorkingAgeGroups(df2013filtered, 'alder_1', 24, 64)
     df2014WorkAge = dataExtract.filterWorkingAgeGroups(df2014filtered, 'alder_1', 24, 64)
@@ -48,18 +45,20 @@ def main():
     df2016WorkAge = dataExtract.filterWorkingAgeGroups(df2016filtered, 'alder_1', 24, 64)
     df2017WorkAge = dataExtract.filterWorkingAgeGroups(df2017filtered, 'alder_1', 24, 64)
 
+    for x in dfTotalWorkAge.columns:
+        print (x)
 
 
+    for index, row in dfTotalWorkAge.iterrows():
+        if row == '' or row == np.nan:
+            print(row)
 
-    #df1973WorkAgeChosenColumnsStandardized = dataExtract.insertDataFrameAndColumnsToStandardScaler(WorkAgeDf1973, columnsToEngineer1973)
-    #df1973WorkAgeChosenColumnsNormalized = dataExtract.insertDataFrameAndColumnsToMinMaxNormalize(WorkAgeDf1973, columnsToEngineer1973)
+    dfTotalWorkAgeScaled = dataExtract.insertDataFrameToScale(dfTotalWorkAge)
+    dfTotalWorkAgeNormalized = dataExtract.insertDataFrameAndNormalize(dfTotalWorkAge)
 
-
-    #df1973AllStandard = dataExtract.insertDataFrameToScale(WorkAgeDf1973)
-    #df1973AllNormalized = dataExtract.insertDataFrameAndNormalize(WorkAgeDf1973)
-    #x_scaled = np.asarray()
-    #kmeans.runKMeansOnScaledData(x_scaled)
-    #PCA.runPCAAnalysisOnScaledData(x_scaled)
+    x_scaled = np.asarray(dfTotalWorkAgeScaled)
+    kmeans.runKMeansOnScaledData(x_scaled)
+    PCA.runPCAAnalysisOnScaledData(x_scaled)
 
 if __name__ == '__main__':
     main()

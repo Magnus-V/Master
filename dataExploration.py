@@ -21,6 +21,6 @@ import numpy as np
 
 df2017 = dataExtract.EUSILC2017
 df2017 = dataExtract.readCSVSurveyConvertToDataFrame(df2017)
-df2017filtered = dataExtract.filterOutDatasetsOnListOfConditions(df2017, columnsToEngineer.createArrayOfConditions2017())
+df2017filtered = dataExtract.filterOutDatasetOnListOfConditions(df2017, columnsToEngineer.createArrayOfConditions2017())
 
 plotting.scatter_matrix(df2017filtered, figsize=(15,15), marker='o', hist_kwds={'bins': 14}, s=60, alpha=0.8, cmap=mglearn.cm3)

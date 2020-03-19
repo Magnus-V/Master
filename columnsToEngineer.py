@@ -85,6 +85,7 @@ def createArrayOfConditions2014():
     age = 'alder_1'
     income = 'aggi_18_1'
     educationLevel = 'utdnivaa_nus2000_1'
+    selfRatingOfHealth = 'hels1'
     sicknessLongTerm = 'hels2a'
     injuryLast12Months = 'hels2b'
     familyPhase = 'fam_fase'
@@ -96,18 +97,18 @@ def createArrayOfConditions2014():
     sex = 'kjonn_1'
     DisabilityPayment = 'kode218_1'
 
-
-    array = [surveyYear, age, income, educationLevel, sicknessLongTerm, injuryLast12Months, maritalStatus, familyPhase,
-             numberOfChildren0to16, housingPopDensity, county, socioEconomicStatus,
+    array = [surveyYear, age, income, educationLevel, selfRatingOfHealth, sicknessLongTerm, injuryLast12Months,
+             maritalStatus, familyPhase, numberOfChildren0to16, housingPopDensity, county, socioEconomicStatus,
              sex, DisabilityPayment]
     return array
 
 
 def createArrayOfConditions2015():
-    surveyYear = 'aargang'
+    surveyYear = 'aar'
     age = 'alder_1'
     income = 'aggi_18_1'
     educationLevel = 'utdnivaa'
+    selfRatingOfHealth = 'hels1'
     sicknessLongTerm = 'hels2a'
     injuryLast12Months = 'hels2b'
     familyPhase = 'fam_fase'
@@ -119,17 +120,17 @@ def createArrayOfConditions2015():
     sex = 'kjonn_1'
     DisabilityPayment = 'kode218_1'
 
-
-    array = [surveyYear, age, income, educationLevel, sicknessLongTerm, injuryLast12Months, maritalStatus, familyPhase,
-             numberOfChildren0to16, housingPopDensity, county, socioEconomicStatus,
+    array = [surveyYear, age, income, educationLevel, selfRatingOfHealth, sicknessLongTerm, injuryLast12Months,
+             maritalStatus, familyPhase, numberOfChildren0to16, housingPopDensity, county, socioEconomicStatus,
              sex, DisabilityPayment]
     return array
 
 def createArrayOfConditions2016():
-    surveyYear = 'aargang'
+    surveyYear = 'aar'
     age = 'alder_1'
     income = 'saminnt_1'
     educationLevel = 'utdnivaa'
+    selfRatingOfHealth = 'hels1'
     sicknessLongTerm = 'hels2a'
     injuryLast12Months = 'hels2b'
     familyPhase = 'fam_fase'
@@ -141,8 +142,8 @@ def createArrayOfConditions2016():
     sex = 'kjonn_1'
     DisabilityPayment = 'bel21_8_1'
 
-    array = [surveyYear, age, income, educationLevel, sicknessLongTerm, injuryLast12Months, maritalStatus, familyPhase,
-             numberOfChildren0to16, housingPopDensity, county, socioEconomicStatus,
+    array = [surveyYear, age, income, educationLevel, selfRatingOfHealth, sicknessLongTerm, injuryLast12Months,
+             maritalStatus, familyPhase, numberOfChildren0to16, housingPopDensity, county, socioEconomicStatus,
              sex, DisabilityPayment]
     return array
 
@@ -151,6 +152,7 @@ def createArrayOfConditions2017():
     age = 'alder_1'
     income = 'saminnt_1'
     educationLevel = 'utdnivaa'
+    selfRatingOfHealth = 'hels1'
     sicknessLongTerm = 'hels2a'
     injuryLast12Months = 'hels2b'
     familyPhase = 'fam_fase'
@@ -164,7 +166,7 @@ def createArrayOfConditions2017():
     weightKg = 'bm2'
     heightCm = 'bm1'
 
-    array = [surveyYear, age, income, educationLevel, sicknessLongTerm, injuryLast12Months, maritalStatus, familyPhase,
+    array = [surveyYear, age, income, educationLevel, selfRatingOfHealth, sicknessLongTerm, injuryLast12Months, maritalStatus, familyPhase,
              numberOfChildren0to16, housingPopDensity, county, socioEconomicStatus,
              sex, DisabilityPayment, weightKg, heightCm]
     return array
@@ -174,6 +176,7 @@ def createArrayOfConditions2018():
     age = 'alder_1'
     income = 'saminnt_1'
     educationLevel = 'utdnivaa'
+    selfRatingOfHealth = 'hels1'
     sicknessLongTerm = 'hels2a'
     injuryLast12Months = 'hels2b'
     familyPhase = 'fam_fase'
@@ -187,7 +190,7 @@ def createArrayOfConditions2018():
     weightKg = 'bm2'
     heightCm = 'bm1'
 
-    array = [surveyYear, age, income, educationLevel, sicknessLongTerm, injuryLast12Months, maritalStatus, familyPhase,
+    array = [surveyYear, age, income, educationLevel, selfRatingOfHealth, sicknessLongTerm, injuryLast12Months, maritalStatus, familyPhase,
              numberOfChildren0to16, housingPopDensity, county, socioEconomicStatus,
              sex, DisabilityPayment, weightKg, heightCm]
     return array

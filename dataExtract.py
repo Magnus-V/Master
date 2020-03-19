@@ -112,7 +112,8 @@ def writeArrayOfDataFramesHeadersToLowerCaseOnly(arrayOfDataFrames):
 listOfDataFramesLower = writeArrayOfDataFramesHeadersToLowerCaseOnly(listOfDataFrames)
 
 def filterWorkingAgeGroups(dataFrame, filter, minAge, maxAge):
-    filteredDataFrame = dataFrame[(dataFrame[filter] > minAge) & (dataFrame[filter] < maxAge)]
+    filteredDataFrame = dataFrame[(dataFrame[filter] >= minAge) & (dataFrame[filter] <= maxAge)]
+    filteredDataFrame.reset_index()
     return filteredDataFrame
 
 def filterListWorkingAgeGroups(listOfDataFrames, filter, excfilter, minAge, maxAge):
@@ -202,7 +203,7 @@ def insertDataFrameToScale(dataFrame):
     standardScaler = StandardScaler()
     x = dataFrame.values
     x_scaled = standardScaler.fit_transform(x)
-    df_temp = pd.DataFrame(x_scaled, index=dataFrame.index)
+    df_temp = pd.DataFrame(x_scaled, index=dataFrame.index, columns=dataFrame.columns)
     return df_temp
 
 def insertDataFrameAndNormalize(dataFrame):

@@ -4,6 +4,8 @@ import PCA
 import columnsToEngineer
 import numpy as np
 import pandas as pd
+import timeSeriesVisualization
+import predictingModel
 
 def main():
     df2012filtered = dataExtract.filterOutDatasetOnListOfConditions(dataExtract.df2012, columnsToEngineer.createArrayOfConditions2014())
@@ -36,8 +38,13 @@ def main():
     dfTotal = dfTotal.drop(columns='aar')
     dfTotal = dfTotal.drop(columns='utdnivaa1')
     dfTotal = dfTotal.drop(columns='utdnivaa_nus2000_1')
+    dfTotal = dfTotal.drop(columns='bm2')
+    dfTotal = dfTotal.drop(columns='bm1')
 
+    print(dfTotal.head(100))
     dfTotalWorkAge = dataExtract.filterWorkingAgeGroups(dfTotal, 'alder_1', 24, 64)
+    print(dfTotal.head(100))
+
     df2012WorkAge = dataExtract.filterWorkingAgeGroups(df2012filtered, 'alder_1', 24, 64)
     df2013WorkAge = dataExtract.filterWorkingAgeGroups(df2013filtered, 'alder_1', 24, 64)
     df2014WorkAge = dataExtract.filterWorkingAgeGroups(df2014filtered, 'alder_1', 24, 64)
@@ -45,20 +52,25 @@ def main():
     df2016WorkAge = dataExtract.filterWorkingAgeGroups(df2016filtered, 'alder_1', 24, 64)
     df2017WorkAge = dataExtract.filterWorkingAgeGroups(df2017filtered, 'alder_1', 24, 64)
 
-    for x in dfTotalWorkAge.columns:
-        print (x)
+    dfTotalWorkAge = dfTotalWorkAge.apply(pd.to_numeric, errors='coerce')
+    dfTotalWorkAge = dfTotalWorkAge.dropna()
 
-
-    for index, row in dfTotalWorkAge.iterrows():
-        if row == '' or row == np.nan:
-            print(row)
 
     dfTotalWorkAgeScaled = dataExtract.insertDataFrameToScale(dfTotalWorkAge)
+    print(dfTotalWorkAgeScaled.head(100))
     dfTotalWorkAgeNormalized = dataExtract.insertDataFrameAndNormalize(dfTotalWorkAge)
 
     x_scaled = np.asarray(dfTotalWorkAgeScaled)
     kmeans.runKMeansOnScaledData(x_scaled)
     PCA.runPCAAnalysisOnScaledData(x_scaled)
+
+    x_scaled = np.asarray(dfTotalWorkAgeNormalized)
+    kmeans.runKMeansOnScaledData(x_scaled)
+    PCA.runPCAAnalysisOnScaledData(x_scaled)
+
+    timeSeriesVisualization.plot_df(dfTotalWorkAge, x=dfTotalWorkAge.aargang, y=dfTotalWorkAge.saminnt_1, title='Test')
+
+    predictingModel.predictionModelLinearRegression(dfTotalWorkAgeScaled, 'saminnt_1')
 
 if __name__ == '__main__':
     main()

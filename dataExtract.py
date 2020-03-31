@@ -9,7 +9,8 @@ import scipy as sp
 import sklearn
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
-from sklearn.preprocessing import StandardScaler, MinMaxScaler
+from sklearn.preprocessing import StandardScaler, MinMaxScaler, OneHotEncoder
+
 
 
 
@@ -210,7 +211,15 @@ def insertDataFrameAndNormalize(dataFrame):
     minMaxScaler = MinMaxScaler()
     x = dataFrame.values
     x_normalized = minMaxScaler.fit_transform(x)
-    df_temp = pd.DataFrame(x_normalized, index=dataFrame.index)
+    df_temp = pd.DataFrame(x_normalized, index=dataFrame.index, columns=dataFrame.columns)
     return df_temp
 
 # https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+def insertDataFrameAndOneHotEncode(dataFrame, columsToOneHotEncode):
+    return
+
+def insertDataFrameAndGetDummies(dataFrame, columnsToOneHotEncode):
+    encodedDf = pd.get_dummies(dataFrame, columns=columnsToOneHotEncode)
+    return encodedDf
+

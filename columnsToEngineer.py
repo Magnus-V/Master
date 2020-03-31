@@ -93,12 +93,12 @@ def createArrayOfConditions2014():
     numberOfChildren0to16 = 'antbarn'
     housingPopDensity = 'ts_stor'
     county = 'landsdel'
-    socioEconomicStatus = 'selvsosstat'
+    economicStatus = 'selvsosstat'
     sex = 'kjonn_1'
     DisabilityPayment = 'kode218_1'
 
     array = [surveyYear, age, income, educationLevel, selfRatingOfHealth, sicknessLongTerm, injuryLast12Months,
-             maritalStatus, familyPhase, numberOfChildren0to16, housingPopDensity, county, socioEconomicStatus,
+             maritalStatus, familyPhase, numberOfChildren0to16, housingPopDensity, county, economicStatus,
              sex, DisabilityPayment]
     return array
 
@@ -116,12 +116,12 @@ def createArrayOfConditions2015():
     numberOfChildren0to16 = 'antbarn'
     housingPopDensity = 'ts_stor'
     county = 'landsdel'
-    socioEconomicStatus = 'selvsosstat'
+    economicStatus = 'selvsosstat'
     sex = 'kjonn_1'
     DisabilityPayment = 'kode218_1'
 
     array = [surveyYear, age, income, educationLevel, selfRatingOfHealth, sicknessLongTerm, injuryLast12Months,
-             maritalStatus, familyPhase, numberOfChildren0to16, housingPopDensity, county, socioEconomicStatus,
+             maritalStatus, familyPhase, numberOfChildren0to16, housingPopDensity, county, economicStatus,
              sex, DisabilityPayment]
     return array
 
@@ -138,12 +138,12 @@ def createArrayOfConditions2016():
     numberOfChildren0to16 = 'antbarn'
     housingPopDensity = 'ts_stor'
     county = 'landsdel'
-    socioEconomicStatus = 'selvsosstat'
+    economicStatus = 'selvsosstat'
     sex = 'kjonn_1'
     DisabilityPayment = 'bel21_8_1'
 
     array = [surveyYear, age, income, educationLevel, selfRatingOfHealth, sicknessLongTerm, injuryLast12Months,
-             maritalStatus, familyPhase, numberOfChildren0to16, housingPopDensity, county, socioEconomicStatus,
+             maritalStatus, familyPhase, numberOfChildren0to16, housingPopDensity, county, economicStatus,
              sex, DisabilityPayment]
     return array
 
@@ -160,14 +160,14 @@ def createArrayOfConditions2017():
     numberOfChildren0to16 = 'antbarn'
     housingPopDensity = 'ts_stor'
     county = 'landsdel'
-    socioEconomicStatus = 'selvsosstat'
+    economicStatus = 'selvsosstat'
     sex = 'kjonn_1'
     DisabilityPayment = 'bel21_8_1'
     weightKg = 'bm2'
     heightCm = 'bm1'
 
     array = [surveyYear, age, income, educationLevel, selfRatingOfHealth, sicknessLongTerm, injuryLast12Months, maritalStatus, familyPhase,
-             numberOfChildren0to16, housingPopDensity, county, socioEconomicStatus,
+             numberOfChildren0to16, housingPopDensity, county, economicStatus,
              sex, DisabilityPayment, weightKg, heightCm]
     return array
 
@@ -184,13 +184,13 @@ def createArrayOfConditions2018():
     numberOfChildren0to16 = 'antbarn'
     housingPopDensity = 'ts_stor'
     county = 'landsdel'
-    socioEconomicStatus = 'selvsosstat'
+    economicStatus = 'selvsosstat'
     sex = 'kjonn_1'
     DisabilityPayment = 'bel21_8_1'
     weightKg = 'bm2'
     heightCm = 'bm1'
 
     array = [surveyYear, age, income, educationLevel, selfRatingOfHealth, sicknessLongTerm, injuryLast12Months, maritalStatus, familyPhase,
-             numberOfChildren0to16, housingPopDensity, county, socioEconomicStatus,
+             numberOfChildren0to16, housingPopDensity, county, economicStatus,
              sex, DisabilityPayment, weightKg, heightCm]
     return array

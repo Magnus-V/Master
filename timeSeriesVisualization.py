@@ -11,3 +11,9 @@ def plot_df(df, x, y, title="", xlabel='Date', ylabel='Value'):
     plt.gca().set(title=title, xlabel=xlabel, ylabel=ylabel)
     plt.show()
 
+def plot_df_2(df):
+    plt.figure(figsize=(20, 8))
+    plt.plot(df['aargang'], df['saminnt_1'], 'b-', label = 'Samlet inntekt')
+    plt.plot(df['aargang'], df['hels1'], 'r-', label = 'Health')
+    plt.xlabel('Date'); plt.ylabel('Value'); plt.title('DaFreek')
+    plt.legend()

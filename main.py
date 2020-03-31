@@ -40,10 +40,16 @@ def main():
     dfTotal = dfTotal.drop(columns='utdnivaa_nus2000_1')
     dfTotal = dfTotal.drop(columns='bm2')
     dfTotal = dfTotal.drop(columns='bm1')
+    dfTotal = dfTotal.drop(columns='selvsosstat')
 
-    print(dfTotal.head(100))
+    columnsToOneHotEncode = ['utdnivaa', 'sivstat_1', 'ts_stor', 'landsdel', 'hels1',
+                             'fam_fase']
+    for x in dfTotal.columns:
+        print(x)
+
+    dfTotal = dataExtract.insertDataFrameAndGetDummies(dfTotal, columnsToOneHotEncode)
+
     dfTotalWorkAge = dataExtract.filterWorkingAgeGroups(dfTotal, 'alder_1', 24, 64)
-    print(dfTotal.head(100))
 
     df2012WorkAge = dataExtract.filterWorkingAgeGroups(df2012filtered, 'alder_1', 24, 64)
     df2013WorkAge = dataExtract.filterWorkingAgeGroups(df2013filtered, 'alder_1', 24, 64)
@@ -52,25 +58,47 @@ def main():
     df2016WorkAge = dataExtract.filterWorkingAgeGroups(df2016filtered, 'alder_1', 24, 64)
     df2017WorkAge = dataExtract.filterWorkingAgeGroups(df2017filtered, 'alder_1', 24, 64)
 
+    df2012WorkAge = df2012WorkAge.apply(pd.to_numeric, errors='coerce').dropna()
+    df2013WorkAge = df2013WorkAge.apply(pd.to_numeric, errors='coerce').dropna()
+    df2014WorkAge = df2014WorkAge.apply(pd.to_numeric, errors='coerce').dropna()
+    df2015WorkAge = df2015WorkAge.apply(pd.to_numeric, errors='coerce').dropna()
+    df2016WorkAge = df2016WorkAge.apply(pd.to_numeric, errors='coerce').dropna()
+    df2017WorkAge = df2017WorkAge.apply(pd.to_numeric, errors='coerce').dropna()
     dfTotalWorkAge = dfTotalWorkAge.apply(pd.to_numeric, errors='coerce')
     dfTotalWorkAge = dfTotalWorkAge.dropna()
 
 
+
+
+
     dfTotalWorkAgeScaled = dataExtract.insertDataFrameToScale(dfTotalWorkAge)
-    print(dfTotalWorkAgeScaled.head(100))
     dfTotalWorkAgeNormalized = dataExtract.insertDataFrameAndNormalize(dfTotalWorkAge)
 
     x_scaled = np.asarray(dfTotalWorkAgeScaled)
-    kmeans.runKMeansOnScaledData(x_scaled)
-    PCA.runPCAAnalysisOnScaledData(x_scaled)
+    #kmeans.runKMeansOnScaledData(x_scaled)
+    #PCA.runPCAAnalysisOnScaledData(x_scaled)
 
     x_scaled = np.asarray(dfTotalWorkAgeNormalized)
-    kmeans.runKMeansOnScaledData(x_scaled)
-    PCA.runPCAAnalysisOnScaledData(x_scaled)
+    #kmeans.runKMeansOnScaledData(x_scaled)
+    #PCA.runPCAAnalysisOnScaledData(x_scaled)
 
-    timeSeriesVisualization.plot_df(dfTotalWorkAge, x=dfTotalWorkAge.aargang, y=dfTotalWorkAge.saminnt_1, title='Test')
+    #timeSeriesVisualization.plot_df(dfTotalWorkAge, x=dfTotalWorkAge.aargang, y=dfTotalWorkAge.saminnt_1, title='Test')
+    #timeSeriesVisualization.plot_df_2(dfTotalWorkAge)
 
-    predictingModel.predictionModelLinearRegression(dfTotalWorkAgeScaled, 'saminnt_1')
+    #predictingModel.predictionModelLinearRegression(df2012WorkAge, 'aggi_18_1', 'aargang')
+    #predictingModel.predictionModelLinearRegression(df2013WorkAge, 'aggi_18_1', 'aargang')
+    #predictingModel.predictionModelLinearRegression(df2014WorkAge, 'aggi_18_1', 'aargang')
+    #predictingModel.predictionModelLinearRegression(df2015WorkAge, 'aggi_18_1', 'aar')
+    #predictingModel.predictionModelLinearRegression(df2016WorkAge, 'saminnt_1', 'aar')
+    #predictingModel.predictionModelLinearRegression(df2017WorkAge, 'saminnt_1', 'aar')
+
+   # predictingModel.predictionModelLinearRegression(dfTotalWorkAge, 'saminnt_1', 'aargang')
+   # predictingModel.predictionModelRidgeRegression(dfTotalWorkAge, 'saminnt_1', 'aargang')
+   # predictingModel.predictionModelLassoRegression(dfTotalWorkAge, 'saminnt_1', 'aargang')
+   # predictingModel.predictionModelSDGRegression(dfTotalWorkAge, 'saminnt_1', 'aargang')
+    predictingModel.predictingRandomForestRegression(dfTotalWorkAge, 'saminnt_1', 'aargang')
+    predictingModel.predictingDecisionsTreeRegression(dfTotalWorkAge, 'saminnt_1', 'aargang')
+
 
 if __name__ == '__main__':
     main()

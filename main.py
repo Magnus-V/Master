@@ -25,8 +25,18 @@ def main():
 
     dfTotal = pd.concat(listOfDataFrames, ignore_index=True)
 
+    dfTotal['sivsta_1'] = pd.to_numeric(dfTotal['sivsta_1'], downcast='integer', errors='coerce')
+    dfTotal['sivstat_1'] = pd.to_numeric(dfTotal['sivstat_1'], downcast='integer', errors='coerce')
+    dfTotal['ts_stor'] = pd.to_numeric(dfTotal['ts_stor'], downcast='integer', errors='coerce')
+
     dfTotal.aargang.fillna(dfTotal.aar, inplace=True)
     dfTotal.sivstat_1.fillna(dfTotal.sivsta_1, inplace=True)
+    listOfValues = []
+    for index, value in dfTotal.utdnivaa_nus2000_1.items():
+        if value not in listOfValues:
+            print(value)
+            listOfValues.append(value)
+    print(listOfValues)
     dfTotal['utdnivaa1'] = dfTotal['utdnivaa_nus2000_1'].str[:1]
     dfTotal.utdnivaa.fillna(dfTotal.utdnivaa1, inplace=True)
     dfTotal.saminnt_1.fillna(dfTotal.aggi_18_1, inplace=True)
@@ -64,8 +74,7 @@ def main():
     df2015WorkAge = df2015WorkAge.apply(pd.to_numeric, errors='coerce').dropna()
     df2016WorkAge = df2016WorkAge.apply(pd.to_numeric, errors='coerce').dropna()
     df2017WorkAge = df2017WorkAge.apply(pd.to_numeric, errors='coerce').dropna()
-    dfTotalWorkAge = dfTotalWorkAge.apply(pd.to_numeric, errors='coerce')
-    dfTotalWorkAge = dfTotalWorkAge.dropna()
+    dfTotalWorkAge = dfTotalWorkAge.apply(pd.to_numeric, errors='coerce').dropna()
 
 
 
@@ -92,10 +101,10 @@ def main():
     #predictingModel.predictionModelLinearRegression(df2016WorkAge, 'saminnt_1', 'aar')
     #predictingModel.predictionModelLinearRegression(df2017WorkAge, 'saminnt_1', 'aar')
 
-   # predictingModel.predictionModelLinearRegression(dfTotalWorkAge, 'saminnt_1', 'aargang')
-   # predictingModel.predictionModelRidgeRegression(dfTotalWorkAge, 'saminnt_1', 'aargang')
-   # predictingModel.predictionModelLassoRegression(dfTotalWorkAge, 'saminnt_1', 'aargang')
-   # predictingModel.predictionModelSDGRegression(dfTotalWorkAge, 'saminnt_1', 'aargang')
+    predictingModel.predictionModelLinearRegression(dfTotalWorkAge, 'saminnt_1', 'aargang')
+    predictingModel.predictionModelRidgeRegression(dfTotalWorkAge, 'saminnt_1', 'aargang')
+    predictingModel.predictionModelLassoRegression(dfTotalWorkAge, 'saminnt_1', 'aargang')
+    predictingModel.predictionModelSDGRegression(dfTotalWorkAge, 'saminnt_1', 'aargang')
     predictingModel.predictingRandomForestRegression(dfTotalWorkAge, 'saminnt_1', 'aargang')
     predictingModel.predictingDecisionsTreeRegression(dfTotalWorkAge, 'saminnt_1', 'aargang')
 

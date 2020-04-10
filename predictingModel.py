@@ -161,8 +161,8 @@ def predictingRandomForestRegression(dataFrame, label, dropYear):
     tree = regr1.estimators_[0]  # Export the image to a dot file
     export_graphviz(tree, out_file='tree.dot', feature_names=feature_list, rounded=True,
                     precision=1, )  # Use dot file to create a graph
-    (graph,) = pydot.graph_from_dot_file('C:/Users/Magnus L. Vestby/Documents/Universitetsarbeid'
-                                         '/Master/INFO390/tree.dot')  # Write graph to a png file
+    #graph,) = pydot.graph_from_dot_file('C:/Users/Magnus L. Vestby/Documents/Universitetsarbeid'
+    #                                     '/Master/INFO390/tree.dot')  # Write graph to a png file
 
     print('Mean Absolute Error:', metrics.mean_absolute_error(y_test, y_pred1))
     print('Mean Squared Error:', metrics.mean_squared_error(y_test, y_pred1))

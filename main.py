@@ -8,6 +8,8 @@ import timeSeriesVisualization
 import predictingModel
 
 def main():
+    df1983filtered = dataExtract.filterOutDatasetOnListOfConditions(dataExtract.df1983, columnsToEngineer.createArrayOfConditions1983())
+    df1995filtered = dataExtract.filterOutDatasetOnListOfConditions(dataExtract.df1995, columnsToEngineer.createArrayOfConditions1995())
     df2012filtered = dataExtract.filterOutDatasetOnListOfConditions(dataExtract.df2012, columnsToEngineer.createArrayOfConditions2014())
     df2013filtered = dataExtract.filterOutDatasetOnListOfConditions(dataExtract.df2013, columnsToEngineer.createArrayOfConditions2014())
     df2014filtered = dataExtract.filterOutDatasetOnListOfConditions(dataExtract.df2014, columnsToEngineer.createArrayOfConditions2014())
@@ -17,6 +19,8 @@ def main():
 
     listOfDataFrames = [df2012filtered, df2013filtered, df2014filtered, df2015filtered, df2016filtered, df2017filtered]
 
+    df1995filtered = dataExtract.streamlineDataframe1995(df1995filtered)
+    df1983filtered = dataExtract.streamlineDataframe1983(df1983filtered)
     df2012filtered = dataExtract.removeDropEmptyRows(df2012filtered, 'utdnivaa_nus2000_1')
     df2013filtered = dataExtract.removeDropEmptyRows(df2013filtered, 'utdnivaa_nus2000_1')
     df2014filtered = dataExtract.removeDropEmptyRows(df2014filtered, 'utdnivaa_nus2000_1')
@@ -28,36 +32,46 @@ def main():
     dfTotal['sivsta_1'] = pd.to_numeric(dfTotal['sivsta_1'], downcast='integer', errors='coerce')
     dfTotal['sivstat_1'] = pd.to_numeric(dfTotal['sivstat_1'], downcast='integer', errors='coerce')
     dfTotal['ts_stor'] = pd.to_numeric(dfTotal['ts_stor'], downcast='integer', errors='coerce')
+    dfTotal['kode218_1'] = pd.to_numeric(dfTotal['kode218_1'], downcast='integer', errors='coerce')
+    dfTotal['bel21_8_1'] = pd.to_numeric(dfTotal['bel21_8_1'], downcast='integer', errors='coerce')
 
     dfTotal.aargang.fillna(dfTotal.aar, inplace=True)
     dfTotal.sivstat_1.fillna(dfTotal.sivsta_1, inplace=True)
-    listOfValues = []
-    for index, value in dfTotal.utdnivaa_nus2000_1.items():
-        if value not in listOfValues:
-            print(value)
-            listOfValues.append(value)
-    print(listOfValues)
     dfTotal['utdnivaa1'] = dfTotal['utdnivaa_nus2000_1'].str[:1]
     dfTotal.utdnivaa.fillna(dfTotal.utdnivaa1, inplace=True)
     dfTotal.saminnt_1.fillna(dfTotal.aggi_18_1, inplace=True)
     dfTotal.kode218_1.fillna(dfTotal.bel21_8_1, inplace=True)
+    dfTotal['kode218_1'] = dataExtract.fixDisabilityPayment(dfTotal, 'kode218_1')
+    dfTotal.landsdel.replace(2,3)
+    dfTotal = dataExtract.fixFamilyPhase(dfTotal)
+    dfTotal['landsdel'] = dataExtract.fixRegion(dfTotal, 'landsdel', reduction=1)
 
-    dfTotal = dfTotal.drop(columns='bel21_8_1')
-    dfTotal = dfTotal.drop(columns='aggi_18_1')
-    dfTotal = dfTotal.drop(columns='sivsta_1')
-    dfTotal = dfTotal.drop(columns='aar')
-    dfTotal = dfTotal.drop(columns='utdnivaa1')
-    dfTotal = dfTotal.drop(columns='utdnivaa_nus2000_1')
-    dfTotal = dfTotal.drop(columns='bm2')
-    dfTotal = dfTotal.drop(columns='bm1')
-    dfTotal = dfTotal.drop(columns='selvsosstat')
+    dfTotal = pd.concat([dfTotal, df1995filtered, df1983filtered])
 
-    columnsToOneHotEncode = ['utdnivaa', 'sivstat_1', 'ts_stor', 'landsdel', 'hels1',
+    ##EUSILC ONLY
+    #dfTotal = dfTotal.drop(columns=(['bel21_8_1', 'aggi_18_1', 'sivsta_1', 'aar', 'utdnivaa1', 'utdnivaa_nus2000_1',
+    #                                 'bm2', 'bm1','selvsosstat']))
+
+    ##1995&EUSILC
+    #dfTotal = dfTotal.drop(columns=(['bel21_8_1', 'aggi_18_1', 'sivsta_1', 'aar', 'utdnivaa1', 'utdnivaa_nus2000_1',
+    #                                'bm2', 'bm1','selvsosstat', 'hels1', 'hels2b', 'antbarn']))
+
+    ##1983&1995&EUSILC
+    dfTotal = dfTotal.drop(columns=(['bel21_8_1', 'aggi_18_1', 'sivsta_1', 'aar', 'utdnivaa1', 'utdnivaa_nus2000_1',
+                                     'bm2', 'bm1', 'selvsosstat', 'hels1', 'hels2b', 'antbarn', 'landsdel']))
+
+    columnsToOneHotEncodeEUSILC = ['utdnivaa', 'sivstat_1', 'ts_stor', 'landsdel', 'hels1',
                              'fam_fase']
-    for x in dfTotal.columns:
-        print(x)
 
-    dfTotal = dataExtract.insertDataFrameAndGetDummies(dfTotal, columnsToOneHotEncode)
+    columnsToOneHotEncode1983 = ['utdnivaa', 'sivstat_1', 'ts_stor', 'hels1',
+                             'fam_fase']
+
+    columnsToOneHotEncode1995EU = ['utdnivaa', 'sivstat_1', 'ts_stor', 'landsdel',
+                             'fam_fase']
+
+    #dfTotal = dataExtract.insertDataFrameAndGetDummies(dfTotal, columnsToOneHotEncode1995EU)
+    dfTotal = dataExtract.insertDataFrameAndGetDummies(dfTotal, columnsToOneHotEncode1983)
+
 
     dfTotalWorkAge = dataExtract.filterWorkingAgeGroups(dfTotal, 'alder_1', 24, 64)
 
@@ -101,7 +115,7 @@ def main():
     #predictingModel.predictionModelLinearRegression(df2016WorkAge, 'saminnt_1', 'aar')
     #predictingModel.predictionModelLinearRegression(df2017WorkAge, 'saminnt_1', 'aar')
 
-    predictingModel.predictionModelLinearRegression(dfTotalWorkAge, 'saminnt_1', 'aargang')
+    #predictingModel.predictionModelLinearRegression(dfTotalWorkAge, 'saminnt_1', 'aargang')
     predictingModel.predictionModelRidgeRegression(dfTotalWorkAge, 'saminnt_1', 'aargang')
     predictingModel.predictionModelLassoRegression(dfTotalWorkAge, 'saminnt_1', 'aargang')
     predictingModel.predictionModelSDGRegression(dfTotalWorkAge, 'saminnt_1', 'aargang')

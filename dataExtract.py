@@ -15,9 +15,9 @@ from sklearn.preprocessing import StandardScaler, MinMaxScaler, OneHotEncoder
 
 
 # Bærbare
-#my_data_folder = os.path.dirname(r'C:\Users\Magnus\Documents\MasterProg\AmazonWebServices\survey_on_income_and_living_conditions\\')
+my_data_folder = os.path.dirname(r'C:\Users\Magnus\Documents\MasterProg\AmazonWebServices\survey_on_income_and_living_conditions\\')
 # Stasjonære
-my_data_folder = os.path.dirname(r'C:\Users\Magnus L. Vestby\Documents\Universitetsarbeid\Master\INFO390\survey_on_income_and_living_conditions\\')
+#my_data_folder = os.path.dirname(r'C:\Users\Magnus L. Vestby\Documents\Universitetsarbeid\Master\INFO390\survey_on_income_and_living_conditions\\')
 
 
 # Surveys predating 1996
@@ -85,6 +85,7 @@ def readDfAndReturnSeries(dataFrame, Seriesname):
 df1973 = readCSVSurveyConvertToDataFrame(LivingConditionsSurvey1973)
 df1983 = readCSVSurveyConvertToDataFrame(LivingConditionsSurvey1983)
 df1987 = readCSVSurveyConvertToDataFrame(LivingConditionsSurvey1987)
+df1995 = readCSVSurveyConvertToDataFrame(LivingConditionsSurvey1995)
 
 df2011 = readCSVSurveyConvertToDataFrame(EUSILC2011)
 df2012 = readCSVSurveyConvertToDataFrame(EUSILC2012)
@@ -223,3 +224,79 @@ def insertDataFrameAndGetDummies(dataFrame, columnsToOneHotEncode):
     encodedDf = pd.get_dummies(dataFrame, columns=columnsToOneHotEncode)
     return encodedDf
 
+def fixAge(df, labelOfBirth, yearOfSurvey):
+    ageSeries = df[labelOfBirth]
+    for index, row in ageSeries.items():
+        age = yearOfSurvey - row
+        df.at[index, labelOfBirth] = age
+    return ageSeries
+
+def fixRegion(df, labelOfRegion, reduction):
+    regionSeries = df[labelOfRegion]
+    for index, row in regionSeries.items():
+        region = row - reduction
+        df.at[index, labelOfRegion] = region
+    return regionSeries
+
+def fixFamilyPhase(df):
+    df.fam_fase.replace(10, 9)
+    df.fam_fase.replace(11,10)
+    df.fam_fase.replace(12, 11)
+    df.fam_fase.replace(13, 11)
+    df.fam_fase.replace(14, np.NaN)
+    return df
+
+def fixDisabilityPayment(df, labelOfDisability):
+    disabilitySeries = df[labelOfDisability]
+    for index, row in disabilitySeries.items():
+        if row != np.NaN:
+            yesOrNo = 2
+            if row > 0:
+                yesOrNo = 1
+            df.at[index, labelOfDisability] = yesOrNo
+    return disabilitySeries
+
+
+def streamlineDataframe1995(df):
+    df['aargang'] = '1995'
+    df['alder_1'] = fixAge(df, 'v004', 95)
+    df['utdnivaa'] = df['v609'].str[:1]
+    df['landsdel'] = df['v547']
+    df['sivstat_1'] = df['v107']
+    df['saminnt_1'] = df['v613']
+    df['hels2a'] = df['v424']
+    df['fam_fase'] = df['v550']
+    #df['antbarn0to10'] = df['v213']
+    df['ts_stor'] = df['v006']
+    df['kjonn_1'] = df['v005']
+    df['kode218_1'] = df['v307']
+    df = df.drop(columns=(['v613', 'v609', 'v004', 'v107', 'v547', 'v424', 'v550', 'v006', 'v005', 'v307']))
+    return df
+
+
+def fixSSHEduCoding(df, labelOfEduCode):
+    educationSeries = df[labelOfEduCode].astype(str)
+    educationSeries = educationSeries.str[:1]
+    educationSeries.replace(5,6)
+    educationSeries.replace(6,7)
+    return educationSeries
+
+
+def streamlineDataframe1983(df):
+    df['aargang'] = '1983'
+    df['alder_1'] = fixAge(df, 'V10', 83)
+    df['utdnivaa'] = fixSSHEduCoding(df, 'V1147')
+    #df['landsdel'] = df['v547']
+    df['sivstat_1'] = df['V42']
+    df['saminnt_1'] = df['V1081']
+    df['hels2a'] = df['V676']
+    df['fam_fase'] = df['V1037']
+    df['antbarn'] = df['V50']
+    df['ts_stor'] = df['V41']
+    df['kjonn_1'] = df['V12']
+    df['kode218_1'] = df['V430']
+    df = df.drop(columns=(['V10', 'V1147', 'V42', 'V1081', 'V676', 'V1037', 'V50', 'V41', 'V12', 'V430']))
+    return df
+
+test = streamlineDataframe1995(df1995)
+test2 = streamlineDataframe1983(df1983)

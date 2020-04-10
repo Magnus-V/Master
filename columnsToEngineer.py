@@ -18,41 +18,42 @@ def createArrayOfConditions1973():
     return array
 
 def createArrayOfConditions1983():
+    yearOfBirth = 'V10'
     income = 'V1081'
-    educationLevel = 'V1147'
-    #sickness =
-    consultationWithDoctor = 'V668'
+    educationLevelSSHCoded = 'V1147'
+    sicknessLongTerm = 'V676'
     #injury = 'v237'
+    familyPhase = 'V1037'
     maritalStatus = 'V42'
     numberOfChildren = 'V50'
-    housingPopDensity = 'v205'
-    housingType = 'V196'
-    workType = 'V459'
-    #vacationFromHousework = ''
-    #vacationOverFourWeeks = ''
+    housingPopDensityUndefined = 'V41'
+    #housingType = 'V196'
+    #workType = 'V459'
     sex = 'V12'
     recievesDisabilityPay = 'V430'
+    #county = 'landsdel'
 
-    array = [income, educationLevel, consultationWithDoctor, maritalStatus, numberOfChildren, housingPopDensity, housingType,
-             workType, sex, recievesDisabilityPay,]
+    array = [yearOfBirth, income, educationLevelSSHCoded, sicknessLongTerm, familyPhase, maritalStatus, numberOfChildren,
+             housingPopDensityUndefined, sex, recievesDisabilityPay]
     return array
 
 def createArrayOfConditions1995():
     income = 'v613'
-    educationLevelSSBCoded = 'v609'
+    YearOfBirth = 'v004'
+    educationLevel = 'v609'
     sicknessLongTerm = 'v424'
-    injuryCausedByViolence = 'v468'
+    #injuryCausedByViolence = 'v468'
     maritalStatus = 'v107'
-    numberOfChildren0to10 = 'v213'
+    familyPhase = 'v550'
+    #numberOfChildren0to10 = 'v213'
     housingPopDensity = 'v006'
-    housingType = 'v007'
-    workTypeAlphaNumericalCoded = 'v386'
+    region = 'v547'
     sex = 'v005'
     recievesDisabilityPay = 'v307'
 
-
-    array = [income, educationLevelSSBCoded, sicknessLongTerm, injuryCausedByViolence, maritalStatus, numberOfChildren0to10,
-             housingPopDensity, housingType, workTypeAlphaNumericalCoded, sex, recievesDisabilityPay]
+    array = [income, YearOfBirth, educationLevel, sicknessLongTerm,
+             maritalStatus, familyPhase, housingPopDensity, region, sex,
+             recievesDisabilityPay]
     return array
 
 def createArrayOfConditions2005():

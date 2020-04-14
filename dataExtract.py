@@ -1,14 +1,10 @@
 import os
 import columnsToEngineer
-import mglearn as mglearn
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import sys
 import scipy as sp
-import sklearn
-from sklearn.cluster import KMeans
-from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, OneHotEncoder
 
 
@@ -82,6 +78,7 @@ def readDfAndReturnSeries(dataFrame, Seriesname):
     tempDataSeries = dataFrame[Seriesname]
     return tempDataSeries
 
+
 df1973 = readCSVSurveyConvertToDataFrame(LivingConditionsSurvey1973)
 df1983 = readCSVSurveyConvertToDataFrame(LivingConditionsSurvey1983)
 df1987 = readCSVSurveyConvertToDataFrame(LivingConditionsSurvey1987)
@@ -111,12 +108,15 @@ def writeArrayOfDataFramesHeadersToLowerCaseOnly(arrayOfDataFrames):
         returnList.append(dataFrame)
     return returnList
 
+
 listOfDataFramesLower = writeArrayOfDataFramesHeadersToLowerCaseOnly(listOfDataFrames)
+
 
 def filterWorkingAgeGroups(dataFrame, filter, minAge, maxAge):
     filteredDataFrame = dataFrame[(dataFrame[filter] >= minAge) & (dataFrame[filter] <= maxAge)]
     filteredDataFrame.reset_index()
     return filteredDataFrame
+
 
 def filterListWorkingAgeGroups(listOfDataFrames, filter, excfilter, minAge, maxAge):
     returnArray = []
@@ -142,6 +142,7 @@ def findIncomeAndEducation(dataFrame, firstCondition, secondCondition):
         returnArray.append(tempArray)
     return returnArray
 
+
 def filterOutDatasetsOnFourConditions(dataFrame, firstCondition, secondCondition, thirdCondition, fourthCondition):
     returnArray = []
     for index, row in dataFrame.iterrows():
@@ -153,9 +154,11 @@ def filterOutDatasetsOnFourConditions(dataFrame, firstCondition, secondCondition
         returnArray.append(tempArray)
     return returnArray
 
+
 def filterOutDatasetOnListOfConditions(dataFrame, arrayOfConditions):
     dataFrame = dataFrame.filter(arrayOfConditions)
     return dataFrame
+
 
 def filterOutArrayOfDatasetsOnArrayOfConditions(arrayOfDataFrames, arrayOfConditions):
     returnArrayOfDataframes = []
@@ -201,12 +204,14 @@ def insertDataFrameAndColumnsToStandardScaler(dataFrame, columnsToNormalize):
     dataFrame[columnsToNormalize] = df_temp
     return dataFrame
 
+
 def insertDataFrameToScale(dataFrame):
     standardScaler = StandardScaler()
     x = dataFrame.values
     x_scaled = standardScaler.fit_transform(x)
     df_temp = pd.DataFrame(x_scaled, index=dataFrame.index, columns=dataFrame.columns)
     return df_temp
+
 
 def insertDataFrameAndNormalize(dataFrame):
     minMaxScaler = MinMaxScaler()
@@ -217,18 +222,25 @@ def insertDataFrameAndNormalize(dataFrame):
 
 # https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
 
+
 def insertDataFrameAndOneHotEncode(dataFrame, columsToOneHotEncode):
     return
+
 
 def insertDataFrameAndGetDummies(dataFrame, columnsToOneHotEncode):
     encodedDf = pd.get_dummies(dataFrame, columns=columnsToOneHotEncode)
     return encodedDf
 
+
 def fixAge(df, labelOfBirth, yearOfSurvey):
     ageSeries = df[labelOfBirth]
     for index, row in ageSeries.items():
-        age = yearOfSurvey - row
-        df.at[index, labelOfBirth] = age
+        if row <= yearOfSurvey:
+            age = yearOfSurvey - row
+            df.at[index, labelOfBirth] = age
+        if row > yearOfSurvey:
+            age = yearOfSurvey + (row-yearOfSurvey)
+            df.at[index, labelOfBirth] = age
     return ageSeries
 
 def fixRegion(df, labelOfRegion, reduction):
@@ -257,6 +269,33 @@ def fixDisabilityPayment(df, labelOfDisability):
     return disabilitySeries
 
 
+def fixSSHEduCoding(df, labelOfEduCode):
+    educationSeries = df[labelOfEduCode].astype(str)
+    educationSeries = educationSeries.str[:1]
+    educationSeries.replace(5,6)
+    educationSeries.replace(6,7)
+    return educationSeries
+
+def fixOldEncoding(df, labelOfEducation):
+    educationSeries = df[labelOfEducation].astype(str)
+    educationSeries = educationSeries.str[:1]
+    educationSeries.replace(5, 6)
+    educationSeries.replace(6, 7)
+    return educationSeries
+
+def combineHealth(df, sickness, injury, combineHealthLabel):
+    df[combineHealthLabel] = 2
+    sicknessSeries = df[sickness]
+    injurySeries = df[injury]
+    for index, row in sicknessSeries.items():
+        if row == 1:
+            df.at[index, combineHealthLabel] = 1
+    for index, row in injurySeries.items():
+        if row == 1:
+            df.at[index, combineHealthLabel] = 1
+    return df[combineHealthLabel]
+
+
 def streamlineDataframe1995(df):
     df['aargang'] = '1995'
     df['alder_1'] = fixAge(df, 'v004', 95)
@@ -272,15 +311,6 @@ def streamlineDataframe1995(df):
     df['kode218_1'] = df['v307']
     df = df.drop(columns=(['v613', 'v609', 'v004', 'v107', 'v547', 'v424', 'v550', 'v006', 'v005', 'v307']))
     return df
-
-
-def fixSSHEduCoding(df, labelOfEduCode):
-    educationSeries = df[labelOfEduCode].astype(str)
-    educationSeries = educationSeries.str[:1]
-    educationSeries.replace(5,6)
-    educationSeries.replace(6,7)
-    return educationSeries
-
 
 def streamlineDataframe1983(df):
     df['aargang'] = '1983'
@@ -298,5 +328,23 @@ def streamlineDataframe1983(df):
     df = df.drop(columns=(['V10', 'V1147', 'V42', 'V1081', 'V676', 'V1037', 'V50', 'V41', 'V12', 'V430']))
     return df
 
-test = streamlineDataframe1995(df1995)
-test2 = streamlineDataframe1983(df1983)
+
+def streamlineDataframe1973(df):
+    df['aargang'] = '1973'
+    df['alder_1'] = fixAge(df, 'v002', 73)
+    df['utdnivaa'] = fixOldEncoding(df, 'v228')
+    df['sivstat_1'] = df['v146']
+    df['saminnt_1'] = df['v406']
+    df['hels2a'] = df['v220']
+    df['hels2b'] = df['v243']
+    df['antbarn'] = df['v149']
+    df['ts_stor'] = df['v205']
+    df['kjonn_1'] = df['v372']
+    df['kode218_1'] = df['v008']
+    df = df.drop(columns=(['v002', 'v228', 'v146', 'v406', 'v220', 'v243', 'v149', 'v205', 'v372', 'v008']))
+    return df
+
+
+#test = streamlineDataframe1995(df1995)
+#test2 = streamlineDataframe1983(df1983)
+test3 = streamlineDataframe1973(df1973)

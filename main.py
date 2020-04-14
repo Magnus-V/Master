@@ -8,6 +8,7 @@ import timeSeriesVisualization
 import predictingModel
 
 def main():
+    df1973filtered = dataExtract.filterOutDatasetOnListOfConditions(dataExtract.df1973, columnsToEngineer.createArrayOfConditions1973())
     df1983filtered = dataExtract.filterOutDatasetOnListOfConditions(dataExtract.df1983, columnsToEngineer.createArrayOfConditions1983())
     df1995filtered = dataExtract.filterOutDatasetOnListOfConditions(dataExtract.df1995, columnsToEngineer.createArrayOfConditions1995())
     df2012filtered = dataExtract.filterOutDatasetOnListOfConditions(dataExtract.df2012, columnsToEngineer.createArrayOfConditions2014())
@@ -19,8 +20,9 @@ def main():
 
     listOfDataFrames = [df2012filtered, df2013filtered, df2014filtered, df2015filtered, df2016filtered, df2017filtered]
 
-    df1995filtered = dataExtract.streamlineDataframe1995(df1995filtered)
+    df1973filtered = dataExtract.streamlineDataframe1973(df1973filtered)
     df1983filtered = dataExtract.streamlineDataframe1983(df1983filtered)
+    df1995filtered = dataExtract.streamlineDataframe1995(df1995filtered)
     df2012filtered = dataExtract.removeDropEmptyRows(df2012filtered, 'utdnivaa_nus2000_1')
     df2013filtered = dataExtract.removeDropEmptyRows(df2013filtered, 'utdnivaa_nus2000_1')
     df2014filtered = dataExtract.removeDropEmptyRows(df2014filtered, 'utdnivaa_nus2000_1')
@@ -46,31 +48,45 @@ def main():
     dfTotal = dataExtract.fixFamilyPhase(dfTotal)
     dfTotal['landsdel'] = dataExtract.fixRegion(dfTotal, 'landsdel', reduction=1)
 
-    dfTotal = pd.concat([dfTotal, df1995filtered, df1983filtered])
+    dfTotal = pd.concat([df1973filtered, df1983filtered, df1995filtered, dfTotal])
+    dfTotal['helskomb'] = dataExtract.combineHealth(dfTotal, 'hels2a', 'hels2b', 'helskomb')
+    
 
-    ##EUSILC ONLY
-    #dfTotal = dfTotal.drop(columns=(['bel21_8_1', 'aggi_18_1', 'sivsta_1', 'aar', 'utdnivaa1', 'utdnivaa_nus2000_1',
-    #                                 'bm2', 'bm1','selvsosstat']))
+    #with pd.option_context('display.max_rows', -1, 'display.max_columns', 5):
+     ##   print
+       # df
+
+
+    ##EUSILC
+    dfTotal = dfTotal.drop(columns=(['bel21_8_1', 'aggi_18_1', 'sivsta_1', 'aar', 'utdnivaa1', 'utdnivaa_nus2000_1',
+                                     'selvsosstat']))
 
     ##1995&EUSILC
-    #dfTotal = dfTotal.drop(columns=(['bel21_8_1', 'aggi_18_1', 'sivsta_1', 'aar', 'utdnivaa1', 'utdnivaa_nus2000_1',
-    #                                'bm2', 'bm1','selvsosstat', 'hels1', 'hels2b', 'antbarn']))
+    dfTotal = dfTotal.drop(columns=(['hels1', 'hels2b', 'antbarn']))
 
     ##1983&1995&EUSILC
-    dfTotal = dfTotal.drop(columns=(['bel21_8_1', 'aggi_18_1', 'sivsta_1', 'aar', 'utdnivaa1', 'utdnivaa_nus2000_1',
-                                     'bm2', 'bm1', 'selvsosstat', 'hels1', 'hels2b', 'antbarn', 'landsdel']))
+    dfTotal = dfTotal.drop(columns=(['landsdel']))
+
+    ##1973&1983&1995&EUSILC
+    dfTotal = dfTotal.drop(columns=(['ts_stor']))
+
+    for x in dfTotal.columns:
+        print(x)
 
     columnsToOneHotEncodeEUSILC = ['utdnivaa', 'sivstat_1', 'ts_stor', 'landsdel', 'hels1',
                              'fam_fase']
 
+    columnsToOneHotEncode1995EU = ['utdnivaa', 'sivstat_1', 'ts_stor', 'landsdel',
+                                   'fam_fase']
+
     columnsToOneHotEncode1983 = ['utdnivaa', 'sivstat_1', 'ts_stor', 'hels1',
                              'fam_fase']
 
-    columnsToOneHotEncode1995EU = ['utdnivaa', 'sivstat_1', 'ts_stor', 'landsdel',
-                             'fam_fase']
+    columnsToOneHotEncodeOverall = ['utdnivaa', 'sivstat_1']
 
     #dfTotal = dataExtract.insertDataFrameAndGetDummies(dfTotal, columnsToOneHotEncode1995EU)
-    dfTotal = dataExtract.insertDataFrameAndGetDummies(dfTotal, columnsToOneHotEncode1983)
+    #dfTotal = dataExtract.insertDataFrameAndGetDummies(dfTotal, columnsToOneHotEncode1983)
+    dfTotal = dataExtract.insertDataFrameAndGetDummies(dfTotal, columnsToOneHotEncodeOverall)
 
 
     dfTotalWorkAge = dataExtract.filterWorkingAgeGroups(dfTotal, 'alder_1', 24, 64)

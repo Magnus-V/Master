@@ -11,9 +11,9 @@ from sklearn.preprocessing import StandardScaler, MinMaxScaler, OneHotEncoder
 
 
 # Bærbare
-my_data_folder = os.path.dirname(r'C:\Users\Magnus\Documents\MasterProg\AmazonWebServices\survey_on_income_and_living_conditions\\')
+#my_data_folder = os.path.dirname(r'C:\Users\Magnus\Documents\MasterProg\AmazonWebServices\survey_on_income_and_living_conditions\\')
 # Stasjonære
-#my_data_folder = os.path.dirname(r'C:\Users\Magnus L. Vestby\Documents\Universitetsarbeid\Master\INFO390\survey_on_income_and_living_conditions\\')
+my_data_folder = os.path.dirname(r'C:\Users\Magnus L. Vestby\Documents\Universitetsarbeid\Master\INFO390\survey_on_income_and_living_conditions\\')
 
 
 # Surveys predating 1996
@@ -61,8 +61,6 @@ EUSILC2017 = os.path.join(my_data_folder, r'LivingConditionsSurveyEUSILC2017.csv
 EUSILC2018 = os.path.join(my_data_folder, r'LivingConditionsSurveyEUSILC2018.csv')
 
 
-
-
 def readCSVSurvey(csvfile):
     readCSV = pd.read_csv(csvfile, low_memory=False)
     return readCSV
@@ -83,6 +81,7 @@ df1973 = readCSVSurveyConvertToDataFrame(LivingConditionsSurvey1973)
 df1983 = readCSVSurveyConvertToDataFrame(LivingConditionsSurvey1983)
 df1987 = readCSVSurveyConvertToDataFrame(LivingConditionsSurvey1987)
 df1995 = readCSVSurveyConvertToDataFrame(LivingConditionsSurvey1995)
+df2005 = readCSVSurveyConvertToDataFrame(CoordinatedSurvey2005Health)
 
 df2011 = readCSVSurveyConvertToDataFrame(EUSILC2011)
 df2012 = readCSVSurveyConvertToDataFrame(EUSILC2012)
@@ -94,7 +93,6 @@ df2017 = readCSVSurveyConvertToDataFrame(EUSILC2017)
 df2018 = readCSVSurveyConvertToDataFrame(EUSILC2018)
 
 listOfDataFrames = [df2012, df2013, df2014, df2015, df2016, df2017, df2018]
-
 
 def writeHeadersToLowerCaseOnly(dataFrame):
     dataFrame.columns = dataFrame.columns.str.lower()
@@ -108,9 +106,7 @@ def writeArrayOfDataFramesHeadersToLowerCaseOnly(arrayOfDataFrames):
         returnList.append(dataFrame)
     return returnList
 
-
 listOfDataFramesLower = writeArrayOfDataFramesHeadersToLowerCaseOnly(listOfDataFrames)
-
 
 def filterWorkingAgeGroups(dataFrame, filter, minAge, maxAge):
     filteredDataFrame = dataFrame[(dataFrame[filter] >= minAge) & (dataFrame[filter] <= maxAge)]
@@ -127,10 +123,6 @@ def filterListWorkingAgeGroups(listOfDataFrames, filter, excfilter, minAge, maxA
             tempDataFrame = dataFrame[(dataFrame[excfilter] > minAge) & (dataFrame[excfilter] < maxAge)]
         returnArray.append(tempDataFrame)
     return returnArray
-
-
-WorkAgeDf1973 = filterWorkingAgeGroups(df1973, 'v002', 24, 64)
-WorkAgeDf2017 = filterWorkingAgeGroups(df2017, 'alder_1', 24, 64)
 
 
 def findIncomeAndEducation(dataFrame, firstCondition, secondCondition):
@@ -260,13 +252,21 @@ def fixFamilyPhase(df):
 
 def fixDisabilityPayment(df, labelOfDisability):
     disabilitySeries = df[labelOfDisability]
+    df[labelOfDisability] = 2
     for index, row in disabilitySeries.items():
-        if row != np.NaN:
-            yesOrNo = 2
-            if row > 0:
-                yesOrNo = 1
-            df.at[index, labelOfDisability] = yesOrNo
-    return disabilitySeries
+        if row > 0:
+            df.at[index, labelOfDisability] = 1
+    return df[labelOfDisability]
+
+
+def fixDisabilityTotal(df, label):
+    disabilitySeries = df[label]
+    for index, row in disabilitySeries.items():
+        if row == (-4) or row == 9 or row == 0:
+            df.at[index, label] = 2
+        if row > 9:
+            df.at[index, label] = 1
+    return df[label]
 
 
 def fixSSHEduCoding(df, labelOfEduCode):
@@ -279,9 +279,26 @@ def fixSSHEduCoding(df, labelOfEduCode):
 def fixOldEncoding(df, labelOfEducation):
     educationSeries = df[labelOfEducation].astype(str)
     educationSeries = educationSeries.str[:1]
-    educationSeries.replace(5, 6)
-    educationSeries.replace(6, 7)
+    educationSeries.replace(3, 2)
+    educationSeries.replace(4, 2)
+    educationSeries.replace(5, 3)
+    educationSeries.replace(6, 4)
+    educationSeries.replace(7, 4)
+    educationSeries.replace(8, 7)
     return educationSeries
+
+
+def fixPopDensity(df, labelOfPopDensity):
+    popDensitySeries = df[labelOfPopDensity]
+    popDensitySeries.replace(11, 1)
+    popDensitySeries.replace(12, 2)
+    popDensitySeries.replace(13, 2)
+    popDensitySeries.replace(14, 2)
+    popDensitySeries.replace(15, 3)
+    popDensitySeries.replace(16, 4)
+    popDensitySeries.replace(17, 5)
+    return popDensitySeries
+
 
 def combineHealth(df, sickness, injury, combineHealthLabel):
     df[combineHealthLabel] = 2
@@ -296,41 +313,35 @@ def combineHealth(df, sickness, injury, combineHealthLabel):
     return df[combineHealthLabel]
 
 
-def streamlineDataframe1995(df):
-    df['aargang'] = '1995'
-    df['alder_1'] = fixAge(df, 'v004', 95)
-    df['utdnivaa'] = df['v609'].str[:1]
-    df['landsdel'] = df['v547']
-    df['sivstat_1'] = df['v107']
-    df['saminnt_1'] = df['v613']
-    df['hels2a'] = df['v424']
-    df['fam_fase'] = df['v550']
-    #df['antbarn0to10'] = df['v213']
-    df['ts_stor'] = df['v006']
-    df['kjonn_1'] = df['v005']
-    df['kode218_1'] = df['v307']
-    df = df.drop(columns=(['v613', 'v609', 'v004', 'v107', 'v547', 'v424', 'v550', 'v006', 'v005', 'v307']))
-    return df
+def fixNoChild(df, combine, firstSet, secondSet):
+    df[combine] = 0
+    first = df[firstSet]
+    second = df[secondSet]
+    for index, row in first.items():
+        if row > 0:
+            df.at[index, combine] += row
+    for index, row in second.items():
+        if row > 1:
+            df.at[index, combine] += row
+    return df[combine]
 
-def streamlineDataframe1983(df):
-    df['aargang'] = '1983'
-    df['alder_1'] = fixAge(df, 'V10', 83)
-    df['utdnivaa'] = fixSSHEduCoding(df, 'V1147')
-    #df['landsdel'] = df['v547']
-    df['sivstat_1'] = df['V42']
-    df['saminnt_1'] = df['V1081']
-    df['hels2a'] = df['V676']
-    df['fam_fase'] = df['V1037']
-    df['antbarn'] = df['V50']
-    df['ts_stor'] = df['V41']
-    df['kjonn_1'] = df['V12']
-    df['kode218_1'] = df['V430']
-    df = df.drop(columns=(['V10', 'V1147', 'V42', 'V1081', 'V676', 'V1037', 'V50', 'V41', 'V12', 'V430']))
-    return df
 
+def fixMaritalStatus(df, labelOfMaritalStatus):
+    maritalStatusSeries = df[labelOfMaritalStatus]
+    maritalStatusSeries.replace(2, 't')
+    maritalStatusSeries.replace(1, 2)
+    maritalStatusSeries.replace('t', 1)
+    return maritalStatusSeries
+
+def fix1983Income(df, incomeLabel):
+    incomeSeries = df[incomeLabel]
+    for index, row in incomeSeries.items():
+        if row == 99999999:
+            df.at[index, incomeLabel] = np.NaN
+    return df[incomeLabel]
 
 def streamlineDataframe1973(df):
-    df['aargang'] = '1973'
+    df['aargang'] = 1973
     df['alder_1'] = fixAge(df, 'v002', 73)
     df['utdnivaa'] = fixOldEncoding(df, 'v228')
     df['sivstat_1'] = df['v146']
@@ -345,6 +356,61 @@ def streamlineDataframe1973(df):
     return df
 
 
+def streamlineDataframe1983(df):
+    df['aargang'] = 1983
+    df['alder_1'] = fixAge(df, 'V10', 83)
+    df['utdnivaa'] = fixSSHEduCoding(df, 'V1147')
+    #df['landsdel'] = df['v547']
+    df['sivstat_1'] = df['V42']
+    df['saminnt_1'] = fix1983Income(df, 'V1081')
+    df['hels2a'] = df['V676']
+    df['fam_fase'] = df['V1037']
+    df['antbarn'] = df['V50']
+    df['ts_stor'] = df['V41']
+    df['kjonn_1'] = df['V12']
+    df['kode218_1'] = df['V430']
+    df = df.drop(columns=(['V10', 'V1147', 'V42', 'V1081', 'V676', 'V1037', 'V50', 'V41', 'V12', 'V430']))
+    return df
+
+
+def streamlineDataframe1995(df):
+    df['aargang'] = 1995
+    df['alder_1'] = fixAge(df, 'v004', 95)
+    df['utdnivaa'] = df['v609'].str[:1]
+    df['landsdel'] = df['v547']
+    df['sivstat_1'] = fixMaritalStatus(df, 'v107')
+    df['saminnt_1'] = df['v613']
+    df['hels2a'] = df['v424']
+    df['fam_fase'] = df['v550']
+    #df['antbarn0to10'] = df['v213']
+    df['ts_stor'] = df['v006']
+    df['kjonn_1'] = df['v005']
+    df['kode218_1'] = df['v307']
+    df = df.drop(columns=(['v613', 'v609', 'v004', 'v107', 'v547', 'v424', 'v550', 'v006', 'v005', 'v307']))
+    return df
+
+
+def streamlineDataframe2005(df):
+    df['aargang'] = 2005
+    df['alder_1'] = df['v0002']
+    df['utdnivaa'] = df['v1276']
+    df['sivstat_1'] = df['v0011']
+    df['fam_fase'] = df['v0012']
+    df['saminnt_1'] = df['v2040']
+    df['hels1'] = df['v0093']
+    df['hels2a'] = df['v0095']
+    df['hels2b'] = df['v0181']
+    df['antbarn'] = fixNoChild(df, 'antbarn', 'v0020', 'v0013')
+    df['landsdel'] = df['v0006']
+    df['ts_stor'] = df['v0009']
+    df['kjonn_1'] = df['v0004']
+    df['kode218_1'] = df['v2300']
+    df = df.drop(columns=(['v0002', 'v1276', 'v0011', 'v0012', 'v2040', 'v0093', 'v0095', 'v0006', 'v0181', 'v0020', 'v0013',
+                           'v0009','v0004','v2300',]))
+    return df
+
+
 #test = streamlineDataframe1995(df1995)
 #test2 = streamlineDataframe1983(df1983)
-test3 = streamlineDataframe1973(df1973)
+#test3 = streamlineDataframe1973(df1973)
+#test4 = streamlineDataframe2005(df2005)

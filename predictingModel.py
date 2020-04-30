@@ -228,7 +228,6 @@ def runRidgePredictionOnYearlyBasis(dataFrame, label, yearFilter, dropYear):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, shuffle=False, random_state=42)
     regressor = Ridge()
     regressor.fit(X_train, y_train)
-    timeSeriesVisualization.visualizeCoefficients(regressor.coef_, X.columns)
     y_pred = regressor.predict(X_test)
     df = pd.DataFrame({'Actual': y_test, 'Predicted': y_pred})
     df1 = df.head(25)
@@ -239,6 +238,10 @@ def runRidgePredictionOnYearlyBasis(dataFrame, label, yearFilter, dropYear):
     plt.grid(which='minor', linestyle=':', linewidth='0.5', color='black')
     plt.show()
 
+    coeff_df = timeSeriesVisualization.visualize_coefficients(regressor.coef_, X.columns, yearFilter)
+    #timeSeriesVisualization.visualizeImportanceOfFactor(regressor.coef_, X.columns, dataFrame)
+
     print('Mean Absolute Error:', metrics.mean_absolute_error(y_test, y_pred))
     print('Mean Squared Error:', metrics.mean_squared_error(y_test, y_pred))
     print('Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(y_test, y_pred)))
+    return coeff_df

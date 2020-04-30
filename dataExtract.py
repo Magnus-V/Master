@@ -272,8 +272,8 @@ def fixDisabilityTotal(df, label):
 def fixSSHEduCoding(df, labelOfEduCode):
     educationSeries = df[labelOfEduCode].astype(str)
     educationSeries = educationSeries.str[:1]
+    educationSeries.replace(6, 7)
     educationSeries.replace(5,6)
-    educationSeries.replace(6,7)
     return educationSeries
 
 def fixOldEncoding(df, labelOfEducation):
@@ -335,6 +335,7 @@ def fixMaritalStatus(df, labelOfMaritalStatus):
 
 def fix1983Income(df, incomeLabel):
     incomeSeries = df[incomeLabel]
+    incomeSeries = pd.to_numeric(incomeSeries, downcast='integer', errors='coerce')
     for index, row in incomeSeries.items():
         if row == 99999999:
             df.at[index, incomeLabel] = np.NaN
@@ -359,7 +360,7 @@ def streamlineDataframe1973(df):
 def streamlineDataframe1983(df):
     df['aargang'] = 1983
     df['alder_1'] = fixAge(df, 'V10', 83)
-    df['utdnivaa'] = fixSSHEduCoding(df, 'V1147')
+    df['utdnivaa'] = fixSSHEduCoding(df, 'V1151')
     #df['landsdel'] = df['v547']
     df['sivstat_1'] = df['V42']
     df['saminnt_1'] = fix1983Income(df, 'V1081')
@@ -369,7 +370,7 @@ def streamlineDataframe1983(df):
     df['ts_stor'] = df['V41']
     df['kjonn_1'] = df['V12']
     df['kode218_1'] = df['V430']
-    df = df.drop(columns=(['V10', 'V1147', 'V42', 'V1081', 'V676', 'V1037', 'V50', 'V41', 'V12', 'V430']))
+    df = df.drop(columns=(['V10', 'V1151', 'V42', 'V1081', 'V676', 'V1037', 'V50', 'V41', 'V12', 'V430']))
     return df
 
 
@@ -405,12 +406,12 @@ def streamlineDataframe2005(df):
     df['ts_stor'] = df['v0009']
     df['kjonn_1'] = df['v0004']
     df['kode218_1'] = df['v2300']
-    df = df.drop(columns=(['v0002', 'v1276', 'v0011', 'v0012', 'v2040', 'v0093', 'v0095', 'v0006', 'v0181', 'v0020', 'v0013',
-                           'v0009','v0004','v2300',]))
+    df = df.drop(columns=(['v0002', 'v1276', 'v0011', 'v0012', 'v2040', 'v0093', 'v0095', 'v0006', 'v0181', 'v0020',
+                           'v0013', 'v0009', 'v0004', 'v2300']))
     return df
 
 
 #test = streamlineDataframe1995(df1995)
-#test2 = streamlineDataframe1983(df1983)
+test2 = streamlineDataframe1983(df1983)
 #test3 = streamlineDataframe1973(df1973)
 #test4 = streamlineDataframe2005(df2005)

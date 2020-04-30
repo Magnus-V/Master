@@ -107,6 +107,7 @@ def main():
     df2016WorkAge = df2016WorkAge.apply(pd.to_numeric, errors='coerce').dropna()
     df2017WorkAge = df2017WorkAge.apply(pd.to_numeric, errors='coerce').dropna()
     dfTotalWorkAge = dfTotalWorkAge.apply(pd.to_numeric, errors='coerce').dropna()
+    dfTotal.reset_index(drop=True)
 
 
     #dfTotalWorkAgeScaled = dataExtract.insertDataFrameToScale(dfTotalWorkAge)
@@ -132,19 +133,26 @@ def main():
 
     #timeSeriesVisualization.checkDifferentMethods(dfTotalWorkAge, 'saminnt_1', 'aargang')
 
-    predictingModel.runRidgePredictionOnYearlyBasis(dataFrame=dfTotalWorkAge, dropYear='aargang', yearFilter=1973,
+
+    coeff1973 = predictingModel.runRidgePredictionOnYearlyBasis(dataFrame=dfTotalWorkAge, dropYear='aargang', yearFilter=1973,
                                                label='saminnt_1')
-    predictingModel.runRidgePredictionOnYearlyBasis(dataFrame=dfTotalWorkAge, dropYear='aargang', yearFilter=1983,
+    coeff1983 = predictingModel.runRidgePredictionOnYearlyBasis(dataFrame=dfTotalWorkAge, dropYear='aargang', yearFilter=1983,
                                                label='saminnt_1')
-    predictingModel.runRidgePredictionOnYearlyBasis(dataFrame=dfTotalWorkAge, dropYear='aargang', yearFilter=1995,
+    coeff1995 = predictingModel.runRidgePredictionOnYearlyBasis(dataFrame=dfTotalWorkAge, dropYear='aargang', yearFilter=1995,
                                                label='saminnt_1')
-    predictingModel.runRidgePredictionOnYearlyBasis(dataFrame=dfTotalWorkAge, dropYear='aargang', yearFilter=2005,
+    coeff2005 = predictingModel.runRidgePredictionOnYearlyBasis(dataFrame=dfTotalWorkAge, dropYear='aargang', yearFilter=2005,
                                                label='saminnt_1')
-    predictingModel.runRidgePredictionOnYearlyBasis(dataFrame=dfTotalWorkAge, dropYear='aargang', yearFilter=2013,
+    coeff2013 = predictingModel.runRidgePredictionOnYearlyBasis(dataFrame=dfTotalWorkAge, dropYear='aargang', yearFilter=2013,
                                                label='saminnt_1')
-    predictingModel.runRidgePredictionOnYearlyBasis(dataFrame=dfTotalWorkAge, dropYear='aargang', yearFilter=2017,
+    coeff2017 = predictingModel.runRidgePredictionOnYearlyBasis(dataFrame=dfTotalWorkAge, dropYear='aargang', yearFilter=2017,
                                                label='saminnt_1')
 
+    timeSeriesVisualization.visualizeTrends(coeff1973, coeff1983, coeff1995, coeff2005, coeff2013, coeff2017,
+                                            dfTotalWorkAge, benchmark='saminnt_1', factor="kjonn_1")
+    timeSeriesVisualization.visualizeTrends(coeff1973, coeff1983, coeff1995, coeff2005, coeff2013, coeff2017,
+                                            dfTotalWorkAge, benchmark='saminnt_1', factor="utdnivaa_6.0")
+    timeSeriesVisualization.visualizeTrends(coeff1973, coeff1983, coeff1995, coeff2005, coeff2013, coeff2017,
+                                            dfTotalWorkAge, benchmark='saminnt_1', factor="utdnivaa_7.0")
 
 if __name__ == '__main__':
     main()

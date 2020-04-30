@@ -18,7 +18,7 @@ def createArrayOfConditions1973():
 def createArrayOfConditions1983():
     yearOfBirth = 'V10'
     income = 'V1081'
-    educationLevelSSHCoded = 'V1147'
+    educationLevelSSHCoded = 'V1151'
     sicknessLongTerm = 'V676'
     familyPhase = 'V1037'
     maritalStatus = 'V42'

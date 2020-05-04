@@ -169,13 +169,13 @@ def predictingRandomForestRegression(dataFrame, label, dropYear):
     print('Mean Squared Error:', metrics.mean_squared_error(y_test, y_pred1))
     print('Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(y_test, y_pred1)))
 
-def predictingDecisionsTreeRegression(dataFrame, label, dropYear):
+def predictingDecisionsTreeRegression(dataFrame, label, dropYear, dropWorkStatus):
     print('\nDecisionTreeRegression\n')
     X1 = pd.DataFrame(dataFrame)
     X = pd.DataFrame(dataFrame)
     y = pd.DataFrame(dataFrame)
     X = X.drop(columns=label)
-    X = X.drop(columns=dropYear)
+    X = X.drop(columns=([dropYear, dropWorkStatus]))
     #X = dataExtract.insertDataFrameToScale(X)
     # X = dataExtract.insertDataFrameAndNormalize(X)
     y = y[label].values
@@ -216,17 +216,17 @@ def predictingDecisionsTreeRegression(dataFrame, label, dropYear):
     print('Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(y_test, y_pred2)))
 
 
-def runRidgePredictionOnYearlyBasis(dataFrame, label, yearFilter, dropYear):
+def runRidgePredictionOnYearlyBasis(dataFrame, label, yearFilter, dropYear, dropWorkStatus):
     X = pd.DataFrame(dataFrame)
     X = X[X['aargang'] == yearFilter]
     y = pd.DataFrame(dataFrame)
     y = y[y['aargang'] == yearFilter]
-    X = X.drop(columns=[label, dropYear])
+    X = X.drop(columns=[label, dropYear, dropWorkStatus])
     # X = dataExtract.insertDataFrameToScale(X)
     # X = dataExtract.insertDataFrameAndNormalize(X)
     y = y[label].values
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, shuffle=False, random_state=42)
-    regressor = Ridge()
+    regressor = Ridge(alpha=2)
     regressor.fit(X_train, y_train)
     y_pred = regressor.predict(X_test)
     df = pd.DataFrame({'Actual': y_test, 'Predicted': y_pred})

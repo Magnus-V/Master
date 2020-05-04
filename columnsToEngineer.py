@@ -2,6 +2,7 @@
 def createArrayOfConditions1973():
     yearOfBirth = 'v002'
     income = 'v406'
+    workLastWeek = 'v003'
     educationLevelOlder = 'v228'
     sicknessLongTerm = 'v220'
     injuryLongTerm = 'v243'
@@ -11,13 +12,14 @@ def createArrayOfConditions1973():
     sex = 'v372'
     receivesDisabilityPay = 'v008'
 
-    array = [yearOfBirth, income, educationLevelOlder, sicknessLongTerm, injuryLongTerm,
+    array = [yearOfBirth, income, workLastWeek, educationLevelOlder, sicknessLongTerm, injuryLongTerm,
              maritalStatus, numberOfChildren, housingPopDensity, sex, receivesDisabilityPay]
     return array
 
 def createArrayOfConditions1983():
     yearOfBirth = 'V10'
     income = 'V1081'
+    workLastWeek = 'V457'
     educationLevelSSHCoded = 'V1151'
     sicknessLongTerm = 'V676'
     familyPhase = 'V1037'
@@ -28,13 +30,14 @@ def createArrayOfConditions1983():
     receivesDisabilityPay = 'V430'
 
 
-    array = [yearOfBirth, income, educationLevelSSHCoded, sicknessLongTerm, familyPhase, maritalStatus, numberOfChildren,
+    array = [yearOfBirth, income, workLastWeek, educationLevelSSHCoded, sicknessLongTerm, familyPhase, maritalStatus, numberOfChildren,
              housingPopDensityUndefined, sex, receivesDisabilityPay]
     return array
 
 def createArrayOfConditions1995():
     income = 'v613'
     YearOfBirth = 'v004'
+    workLastWeek = 'v312'
     educationLevel = 'v609'
     sicknessAndInjuryLongTerm = 'v424'
     maritalStatus = 'v107'
@@ -45,7 +48,7 @@ def createArrayOfConditions1995():
     sex = 'v005'
     receivesDisabilityPay = 'v307'
 
-    array = [income, YearOfBirth, educationLevel, sicknessAndInjuryLongTerm,
+    array = [income, YearOfBirth, workLastWeek, educationLevel, sicknessAndInjuryLongTerm,
              maritalStatus, familyPhase, housingPopDensity, region, sex,
              receivesDisabilityPay]
     return array
@@ -53,6 +56,7 @@ def createArrayOfConditions1995():
 def createArrayOfConditions2005():
     age = 'v0002'
     income = 'v2040'
+    workLastWeek = 'v0081'
     educationLevel = 'v1276'
     selfRatingOfHealth = 'v0093'
     sicknessLongTerm = 'v0095'
@@ -66,7 +70,7 @@ def createArrayOfConditions2005():
     sex = 'v0004'
     degreeOfDisability = 'v2300'
 
-    array = [age, income, educationLevel, selfRatingOfHealth, sicknessLongTerm, injuryLast12Months, maritalStatus,
+    array = [age, income, workLastWeek, educationLevel, selfRatingOfHealth, sicknessLongTerm, injuryLast12Months, maritalStatus,
              familyPhase, county,
              numberOfChildren6to15, numberOfChildren0to5, housingPopDensity,
              sex, degreeOfDisability]
@@ -77,6 +81,7 @@ def createArrayOfConditions2014():
     surveyYear = 'aargang'
     age = 'alder_1'
     income = 'aggi_18_1'
+    workLastWeek = 'arb1_1'
     educationLevel = 'utdnivaa_nus2000_1'
     selfRatingOfHealth = 'hels1'
     sicknessLongTerm = 'hels2a'
@@ -90,7 +95,7 @@ def createArrayOfConditions2014():
     sex = 'kjonn_1'
     DisabilityPayment = 'kode218_1'
 
-    array = [surveyYear, age, income, educationLevel, selfRatingOfHealth, sicknessLongTerm, injuryLast12Months,
+    array = [surveyYear, age, income, workLastWeek, educationLevel, selfRatingOfHealth, sicknessLongTerm, injuryLast12Months,
              maritalStatus, familyPhase, numberOfChildren0to16, housingPopDensity, county, economicStatus,
              sex, DisabilityPayment]
     return array
@@ -100,6 +105,7 @@ def createArrayOfConditions2015():
     surveyYear = 'aar'
     age = 'alder_1'
     income = 'aggi_18_1'
+    workLastWeek = 'arb1_1'
     educationLevel = 'utdnivaa'
     selfRatingOfHealth = 'hels1'
     sicknessLongTerm = 'hels2a'
@@ -113,7 +119,7 @@ def createArrayOfConditions2015():
     sex = 'kjonn_1'
     DisabilityPayment = 'kode218_1'
 
-    array = [surveyYear, age, income, educationLevel, selfRatingOfHealth, sicknessLongTerm, injuryLast12Months,
+    array = [surveyYear, age, income, workLastWeek, educationLevel, selfRatingOfHealth, sicknessLongTerm, injuryLast12Months,
              maritalStatus, familyPhase, numberOfChildren0to16, housingPopDensity, county, economicStatus,
              sex, DisabilityPayment]
     return array
@@ -122,6 +128,7 @@ def createArrayOfConditions2016():
     surveyYear = 'aar'
     age = 'alder_1'
     income = 'saminnt_1'
+    workLastWeek = 'arb1_1'
     educationLevel = 'utdnivaa'
     selfRatingOfHealth = 'hels1'
     sicknessLongTerm = 'hels2a'
@@ -135,7 +142,7 @@ def createArrayOfConditions2016():
     sex = 'kjonn_1'
     DisabilityPayment = 'bel21_8_1'
 
-    array = [surveyYear, age, income, educationLevel, selfRatingOfHealth, sicknessLongTerm, injuryLast12Months,
+    array = [surveyYear, age, income, workLastWeek, educationLevel, selfRatingOfHealth, sicknessLongTerm, injuryLast12Months,
              maritalStatus, familyPhase, numberOfChildren0to16, housingPopDensity, county, economicStatus,
              sex, DisabilityPayment]
     return array
@@ -144,6 +151,7 @@ def createArrayOfConditions2017():
     surveyYear = 'aar'
     age = 'alder_1'
     income = 'saminnt_1'
+    workLastWeek = 'arb1_1'
     educationLevel = 'utdnivaa'
     selfRatingOfHealth = 'hels1'
     sicknessLongTerm = 'hels2a'
@@ -158,7 +166,7 @@ def createArrayOfConditions2017():
     DisabilityPayment = 'bel21_8_1'
 
 
-    array = [surveyYear, age, income, educationLevel, selfRatingOfHealth, sicknessLongTerm,
+    array = [surveyYear, age, workLastWeek, income, educationLevel, selfRatingOfHealth, sicknessLongTerm,
              injuryLast12Months, maritalStatus, familyPhase,
              numberOfChildren0to16, housingPopDensity, county, economicStatus,
              sex, DisabilityPayment]
@@ -168,6 +176,7 @@ def createArrayOfConditions2018():
     surveyYear = 'aar'
     age = 'alder_1'
     income = 'saminnt_1'
+    workLastWeek = 'arb1_1'
     educationLevel = 'utdnivaa'
     selfRatingOfHealth = 'hels1'
     sicknessLongTerm = 'hels2a'
@@ -181,7 +190,7 @@ def createArrayOfConditions2018():
     sex = 'kjonn_1'
     DisabilityPayment = 'bel21_8_1'
 
-    array = [surveyYear, age, income, educationLevel, selfRatingOfHealth, sicknessLongTerm, injuryLast12Months,
+    array = [surveyYear, age, income, workLastWeek, educationLevel, selfRatingOfHealth, sicknessLongTerm, injuryLast12Months,
              maritalStatus, familyPhase,
              numberOfChildren0to16, housingPopDensity, county, economicStatus,
              sex, DisabilityPayment]

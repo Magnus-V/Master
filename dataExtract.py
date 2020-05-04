@@ -110,9 +110,13 @@ listOfDataFramesLower = writeArrayOfDataFramesHeadersToLowerCaseOnly(listOfDataF
 
 def filterWorkingAgeGroups(dataFrame, filter, minAge, maxAge):
     filteredDataFrame = dataFrame[(dataFrame[filter] >= minAge) & (dataFrame[filter] <= maxAge)]
-    filteredDataFrame.reset_index()
+    filteredDataFrame.reset_index(inplace=True, drop=True)
     return filteredDataFrame
 
+def filterWorkedLastWeek(dataFrame, filter, validValue):
+    filteredDataFrame = dataFrame[(dataFrame[filter] == validValue)]
+    filteredDataFrame.reset_index()
+    return filteredDataFrame
 
 def filterListWorkingAgeGroups(listOfDataFrames, filter, excfilter, minAge, maxAge):
     returnArray = []
@@ -149,6 +153,7 @@ def filterOutDatasetsOnFourConditions(dataFrame, firstCondition, secondCondition
 
 def filterOutDatasetOnListOfConditions(dataFrame, arrayOfConditions):
     dataFrame = dataFrame.filter(arrayOfConditions)
+    dataFrame = dataFrame.apply(pd.to_numeric, downcast='integer', errors='coerce')
     return dataFrame
 
 
@@ -235,6 +240,7 @@ def fixAge(df, labelOfBirth, yearOfSurvey):
             df.at[index, labelOfBirth] = age
     return ageSeries
 
+
 def fixRegion(df, labelOfRegion, reduction):
     regionSeries = df[labelOfRegion]
     for index, row in regionSeries.items():
@@ -242,13 +248,15 @@ def fixRegion(df, labelOfRegion, reduction):
         df.at[index, labelOfRegion] = region
     return regionSeries
 
+
 def fixFamilyPhase(df):
-    df.fam_fase.replace(10, 9)
-    df.fam_fase.replace(11,10)
-    df.fam_fase.replace(12, 11)
-    df.fam_fase.replace(13, 11)
-    df.fam_fase.replace(14, np.NaN)
+    df.fam_fase.replace(10, 9, inplace=True)
+    df.fam_fase.replace(11,10, inplace=True)
+    df.fam_fase.replace(12, 11, inplace=True)
+    df.fam_fase.replace(13, 11, inplace=True)
+    df.fam_fase.replace(14, np.NaN, inplace=True)
     return df
+
 
 def fixDisabilityPayment(df, labelOfDisability):
     disabilitySeries = df[labelOfDisability]
@@ -272,31 +280,31 @@ def fixDisabilityTotal(df, label):
 def fixSSHEduCoding(df, labelOfEduCode):
     educationSeries = df[labelOfEduCode].astype(str)
     educationSeries = educationSeries.str[:1]
-    educationSeries.replace(6, 7)
-    educationSeries.replace(5,6)
+    educationSeries.replace(5, 6, inplace=True)
     return educationSeries
+
 
 def fixOldEncoding(df, labelOfEducation):
     educationSeries = df[labelOfEducation].astype(str)
     educationSeries = educationSeries.str[:1]
-    educationSeries.replace(3, 2)
-    educationSeries.replace(4, 2)
-    educationSeries.replace(5, 3)
-    educationSeries.replace(6, 4)
-    educationSeries.replace(7, 4)
-    educationSeries.replace(8, 7)
+    educationSeries.replace(3, 2, inplace=True)
+    educationSeries.replace(4, 2, inplace=True)
+    educationSeries.replace(5, 3, inplace=True)
+    educationSeries.replace(6, 2, inplace=True)
+    educationSeries.replace(7, 3, inplace=True)
+    educationSeries.replace(8, 4, inplace=True)
     return educationSeries
 
 
 def fixPopDensity(df, labelOfPopDensity):
     popDensitySeries = df[labelOfPopDensity]
-    popDensitySeries.replace(11, 1)
-    popDensitySeries.replace(12, 2)
-    popDensitySeries.replace(13, 2)
-    popDensitySeries.replace(14, 2)
-    popDensitySeries.replace(15, 3)
-    popDensitySeries.replace(16, 4)
-    popDensitySeries.replace(17, 5)
+    popDensitySeries.replace(11, 1, inplace=True)
+    popDensitySeries.replace(12, 2, inplace=True)
+    popDensitySeries.replace(13, 2, inplace=True)
+    popDensitySeries.replace(14, 2, inplace=True)
+    popDensitySeries.replace(15, 3, inplace=True)
+    popDensitySeries.replace(16, 4, inplace=True)
+    popDensitySeries.replace(17, 5, inplace=True)
     return popDensitySeries
 
 
@@ -328,10 +336,24 @@ def fixNoChild(df, combine, firstSet, secondSet):
 
 def fixMaritalStatus(df, labelOfMaritalStatus):
     maritalStatusSeries = df[labelOfMaritalStatus]
-    maritalStatusSeries.replace(2, 't')
-    maritalStatusSeries.replace(1, 2)
-    maritalStatusSeries.replace('t', 1)
+    maritalStatusSeries.replace(2, 't', inplace=True)
+    maritalStatusSeries.replace(1, 2, inplace=True)
+    maritalStatusSeries.replace('t', 1, inplace=True)
     return maritalStatusSeries
+
+def inverseDisability(df, labelOfDisability):
+    disabilitySeries = df[labelOfDisability]
+    disabilitySeries.replace(2, 't', inplace=True)
+    disabilitySeries.replace(1, 2, inplace=True)
+    disabilitySeries.replace('t', 1, inplace=True)
+    return disabilitySeries
+
+def inverseHealth(df, labelOfHealth):
+    healthSeries = df[labelOfHealth]
+    healthSeries.replace(2, 't', inplace=True)
+    healthSeries.replace(1, 2, inplace=True)
+    healthSeries.replace('t', 1, inplace=True)
+    return healthSeries
 
 def fix1983Income(df, incomeLabel):
     incomeSeries = df[incomeLabel]
@@ -345,6 +367,7 @@ def streamlineDataframe1973(df):
     df['aargang'] = 1973
     df['alder_1'] = fixAge(df, 'v002', 73)
     df['utdnivaa'] = fixOldEncoding(df, 'v228')
+    df['arb1_1'] = df['v003']
     df['sivstat_1'] = df['v146']
     df['saminnt_1'] = df['v406']
     df['hels2a'] = df['v220']
@@ -352,8 +375,8 @@ def streamlineDataframe1973(df):
     df['antbarn'] = df['v149']
     df['ts_stor'] = df['v205']
     df['kjonn_1'] = df['v372']
-    df['kode218_1'] = df['v008']
-    df = df.drop(columns=(['v002', 'v228', 'v146', 'v406', 'v220', 'v243', 'v149', 'v205', 'v372', 'v008']))
+    df['kode218_1'] = fixDisabilityPayment(df, 'v008')
+    df = df.drop(columns=(['v002', 'v003', 'v228', 'v146', 'v406', 'v220', 'v243', 'v149', 'v205', 'v372', 'v008']))
     return df
 
 
@@ -361,6 +384,7 @@ def streamlineDataframe1983(df):
     df['aargang'] = 1983
     df['alder_1'] = fixAge(df, 'V10', 83)
     df['utdnivaa'] = fixSSHEduCoding(df, 'V1151')
+    df['arb1_1'] = df['V457']
     #df['landsdel'] = df['v547']
     df['sivstat_1'] = df['V42']
     df['saminnt_1'] = fix1983Income(df, 'V1081')
@@ -370,14 +394,16 @@ def streamlineDataframe1983(df):
     df['ts_stor'] = df['V41']
     df['kjonn_1'] = df['V12']
     df['kode218_1'] = df['V430']
-    df = df.drop(columns=(['V10', 'V1151', 'V42', 'V1081', 'V676', 'V1037', 'V50', 'V41', 'V12', 'V430']))
+    df = df.drop(columns=(['V10', 'V457', 'V1151', 'V42', 'V1081', 'V676', 'V1037', 'V50', 'V41', 'V12', 'V430']))
     return df
 
 
 def streamlineDataframe1995(df):
     df['aargang'] = 1995
     df['alder_1'] = fixAge(df, 'v004', 95)
-    df['utdnivaa'] = df['v609'].str[:1]
+    df['v609'].replace(np.NaN, 9, inplace=True)
+    df['utdnivaa'] = df.v609.astype(str).str[:1].astype(int)
+    df['arb1_1'] = df['v312']
     df['landsdel'] = df['v547']
     df['sivstat_1'] = fixMaritalStatus(df, 'v107')
     df['saminnt_1'] = df['v613']
@@ -387,7 +413,7 @@ def streamlineDataframe1995(df):
     df['ts_stor'] = df['v006']
     df['kjonn_1'] = df['v005']
     df['kode218_1'] = df['v307']
-    df = df.drop(columns=(['v613', 'v609', 'v004', 'v107', 'v547', 'v424', 'v550', 'v006', 'v005', 'v307']))
+    df = df.drop(columns=(['v613', 'v609', 'v312', 'v004', 'v107', 'v547', 'v424', 'v550', 'v006', 'v005', 'v307']))
     return df
 
 
@@ -395,6 +421,7 @@ def streamlineDataframe2005(df):
     df['aargang'] = 2005
     df['alder_1'] = df['v0002']
     df['utdnivaa'] = df['v1276']
+    df['arb1_1'] = df['v0081']
     df['sivstat_1'] = df['v0011']
     df['fam_fase'] = df['v0012']
     df['saminnt_1'] = df['v2040']
@@ -406,12 +433,11 @@ def streamlineDataframe2005(df):
     df['ts_stor'] = df['v0009']
     df['kjonn_1'] = df['v0004']
     df['kode218_1'] = df['v2300']
-    df = df.drop(columns=(['v0002', 'v1276', 'v0011', 'v0012', 'v2040', 'v0093', 'v0095', 'v0006', 'v0181', 'v0020',
+    df = df.drop(columns=(['v0002', 'v0081', 'v1276', 'v0011', 'v0012', 'v2040', 'v0093', 'v0095', 'v0006', 'v0181', 'v0020',
                            'v0013', 'v0009', 'v0004', 'v2300']))
     return df
 
-
-#test = streamlineDataframe1995(df1995)
-test2 = streamlineDataframe1983(df1983)
-#test3 = streamlineDataframe1973(df1973)
+#test = streamlineDataframe1973(df1973)
+#test2 = streamlineDataframe1983(df1983)
+#test3 = streamlineDataframe1995(df1995)
 #test4 = streamlineDataframe2005(df2005)

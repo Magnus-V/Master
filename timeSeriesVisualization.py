@@ -58,7 +58,7 @@ def visualize_coefficients(coefs, namesX, year):
     negCoefs = coefs.copy()
     posCoefs[posCoefs <= 0] = np.nan
     negCoefs[negCoefs > 0] = np.nan
-    fig, ax = plt.subplots(figsize = (10, 10))
+    fig, ax = plt.subplots(figsize=(10, 10))
     ax.set_title(f'Coefficient of year {year}')
     rects1 = ax.bar(x=names, height=posCoefs, width=0.8, color="#33ff33")
     rects2 = ax.bar(x=names, height=negCoefs, width=0.8, color="#ff1a1a")
@@ -67,12 +67,13 @@ def visualize_coefficients(coefs, namesX, year):
     # Make a bar plot for the coefficients, including their names on the x-axis
     plt.grid(which='major', linestyle='-', linewidth='0.5', color='green')
     plt.grid(which='minor', linestyle='-', linewidth='0.5', color='black')
-    plt.show()
+
 
     def autolabel(rects):
         """Attach a text label above each bar in *rects*, displaying its height."""
         for rect in rects:
             height = rect.get_height()
+            height.astype(int)
             ax.annotate('{}'.format(height),
                         xy=(rect.get_x() + rect.get_width() / 2, height),
                         xytext=(0, 3),  # 3 points vertical offset
@@ -82,6 +83,7 @@ def visualize_coefficients(coefs, namesX, year):
     autolabel(rects1)
     autolabel(rects2)
 
+    plt.show()
     coeff_df = pd.DataFrame(coefs, namesX, columns=['Coefficient'])
     coeff_df = coeff_df.astype({'Coefficient': int})
     print(coeff_df)

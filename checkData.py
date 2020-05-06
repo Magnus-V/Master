@@ -212,4 +212,3 @@ def createWageGroups(dataFrame):
     dictWithValidInformation['avgValue'] = addition / noRow
     return dictWithValidInformation
 
-print(createWageGroups(df2017))

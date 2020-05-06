@@ -284,6 +284,14 @@ def fixSSHEduCoding(df, labelOfEduCode):
     return educationSeries
 
 
+def fix1995edu(df, labelOfEducation):
+    educationSeries = df[labelOfEducation].astype(str)
+    educationSeries = educationSeries.replace(np.nan, 9)
+    df.replace(r'\s+', np.nan, regex=True)
+    educationSeries = educationSeries.str[:1]
+    return educationSeries
+
+
 def fixOldEncoding(df, labelOfEducation):
     educationSeries = df[labelOfEducation].astype(str)
     educationSeries = educationSeries.str[:1]
@@ -341,12 +349,14 @@ def fixMaritalStatus(df, labelOfMaritalStatus):
     maritalStatusSeries.replace('t', 1, inplace=True)
     return maritalStatusSeries
 
+
 def inverseDisability(df, labelOfDisability):
     disabilitySeries = df[labelOfDisability]
     disabilitySeries.replace(2, 't', inplace=True)
     disabilitySeries.replace(1, 2, inplace=True)
     disabilitySeries.replace('t', 1, inplace=True)
     return disabilitySeries
+
 
 def inverseHealth(df, labelOfHealth):
     healthSeries = df[labelOfHealth]
@@ -355,6 +365,7 @@ def inverseHealth(df, labelOfHealth):
     healthSeries.replace('t', 1, inplace=True)
     return healthSeries
 
+
 def fix1983Income(df, incomeLabel):
     incomeSeries = df[incomeLabel]
     incomeSeries = pd.to_numeric(incomeSeries, downcast='integer', errors='coerce')
@@ -362,6 +373,7 @@ def fix1983Income(df, incomeLabel):
         if row == 99999999:
             df.at[index, incomeLabel] = np.NaN
     return df[incomeLabel]
+
 
 def streamlineDataframe1973(df):
     df['aargang'] = 1973
@@ -401,8 +413,7 @@ def streamlineDataframe1983(df):
 def streamlineDataframe1995(df):
     df['aargang'] = 1995
     df['alder_1'] = fixAge(df, 'v004', 95)
-    df['v609'].replace(np.NaN, 9, inplace=True)
-    df['utdnivaa'] = df.v609.astype(str).str[:1].astype(int)
+    df['utdnivaa'] = fix1995edu(df, 'v609')
     df['arb1_1'] = df['v312']
     df['landsdel'] = df['v547']
     df['sivstat_1'] = fixMaritalStatus(df, 'v107')
@@ -437,7 +448,9 @@ def streamlineDataframe2005(df):
                            'v0013', 'v0009', 'v0004', 'v2300']))
     return df
 
-#test = streamlineDataframe1973(df1973)
-#test2 = streamlineDataframe1983(df1983)
-#test3 = streamlineDataframe1995(df1995)
-#test4 = streamlineDataframe2005(df2005)
+test1 = streamlineDataframe1973(df1973)
+test2 = streamlineDataframe1983(df1983)
+test3 = streamlineDataframe1995(df1995)
+test4 = streamlineDataframe2005(df2005)
+
+

@@ -54,7 +54,6 @@ def main():
     dfTotal.utdnivaa.fillna(dfTotal.utdnivaa1, inplace=True)
     dfTotal.saminnt_1.fillna(dfTotal.aggi_18_1, inplace=True)
     dfTotal.kode218_1.fillna(dfTotal.bel21_8_1, inplace=True)
-    dfTotal['kode218_1'] = dataExtract.fixDisabilityPayment(dfTotal, 'kode218_1')
     dfTotal.landsdel.replace(2,3)
     dfTotal = dataExtract.fixFamilyPhase(dfTotal)
     dfTotal['landsdel'] = dataExtract.fixRegion(dfTotal, 'landsdel', reduction=1)
@@ -63,10 +62,11 @@ def main():
     dfToBeAdded = pd.concat(listOfOlderDataframes, axis=0, sort=True)
     dfTotal = pd.concat([dfToBeAdded, dfTotal], axis=0, sort=True)
     dfTotal['helskomb'] = dataExtract.combineHealth(dfTotal, 'hels2a', 'hels2b', 'helskomb')
+    dfTotal['kode218_1'] = dataExtract.fixDisabilityPayment(dfTotal, 'kode218_1')
 
 
     #with pd.option_context('display.max_rows', -1, 'display.max_columns', -1):
-     #   print(dfTotal.info)
+        #print(df2005filtered.info())
 
 
     ##EUSILC
@@ -92,8 +92,6 @@ def main():
     dfTotal['kode218_1'] = dataExtract.inverseDisability(dfTotal, 'kode218_1')
     dfTotal['helskomb'] = dataExtract.inverseHealth(dfTotal, 'helskomb')
     dfTotal.apply(pd.to_numeric, errors='coerce')
-    dfTotal = dfTotal.dropna()
-    dfTotal.reset_index(drop=True, inplace=True)
 
 
 
@@ -108,6 +106,9 @@ def main():
 
     columnsToOneHotEncodeOverall = ['utdnivaa', 'sivstat_1']
 
+    dfTotal = dfTotal.dropna()
+    dfTotal.reset_index(drop=True, inplace=True)
+
     #dfTotal = dataExtract.insertDataFrameAndGetDummies(dfTotal, columnsToOneHotEncode1995EU)
     #dfTotal = dataExtract.insertDataFrameAndGetDummies(dfTotal, columnsToOneHotEncode1983)
     dfTotal = dataExtract.insertDataFrameAndGetDummies(dfTotal, columnsToOneHotEncodeOverall)
@@ -119,7 +120,7 @@ def main():
     df2016WorkAge = dataExtract.filterWorkingAgeGroups(df2016filtered, 'alder_1', 24, 64)
     df2017WorkAge = dataExtract.filterWorkingAgeGroups(df2017filtered, 'alder_1', 24, 64)
     dfTotalWorkAge = dataExtract.filterWorkingAgeGroups(dfTotal, 'alder_1', 24, 64)
-    dfTotalWorkAge = dataExtract.filterWorkedLastWeek(dfTotalWorkAge, 'arb1_1', 1)
+    #dfTotalWorkAge = dataExtract.filterWorkedLastWeek(dfTotalWorkAge, 'arb1_1', 1)
 
 
     df2012WorkAge = df2012WorkAge.apply(pd.to_numeric, errors='coerce').dropna()
@@ -153,13 +154,12 @@ def main():
 
     #timeSeriesVisualization.checkDifferentMethods(dfTotalWorkAge, 'saminnt_1', 'aargang')
 
-
-    coeff1973 = predictingModel.runRidgePredictionOnYearlyBasis(dataFrame=dfTotalWorkAge, dropYear='aargang', yearFilter=1973,
-                                               label='saminnt_1', dropWorkStatus='arb1_1')
-    coeff1983 = predictingModel.runRidgePredictionOnYearlyBasis(dataFrame=dfTotalWorkAge, dropYear='aargang', yearFilter=1983,
-                                               label='saminnt_1', dropWorkStatus='arb1_1')
-    coeff1995 = predictingModel.runRidgePredictionOnYearlyBasis(dataFrame=dfTotalWorkAge, dropYear='aargang', yearFilter=1995,
-                                               label='saminnt_1', dropWorkStatus='arb1_1')
+    coeff1973 = predictingModel.runRidgePredictionOnYearlyBasis(dataFrame=dfTotalWorkAge, dropYear='aargang',
+                                                                yearFilter=1973, label='saminnt_1', dropWorkStatus='arb1_1')
+    coeff1983 = predictingModel.runRidgePredictionOnYearlyBasis(dataFrame=dfTotalWorkAge, dropYear='aargang',
+                                                                yearFilter=1983, label='saminnt_1', dropWorkStatus='arb1_1')
+    coeff1995 = predictingModel.runRidgePredictionOnYearlyBasis(dataFrame=dfTotalWorkAge, dropYear='aargang',
+                                                                yearFilter=1995, label='saminnt_1', dropWorkStatus='arb1_1')
     coeff2005 = predictingModel.runRidgePredictionOnYearlyBasis(dataFrame=dfTotalWorkAge, dropYear='aargang', yearFilter=2005,
                                                label='saminnt_1', dropWorkStatus='arb1_1')
     coeff2013 = predictingModel.runRidgePredictionOnYearlyBasis(dataFrame=dfTotalWorkAge, dropYear='aargang', yearFilter=2013,
@@ -175,6 +175,8 @@ def main():
                                             dfTotalWorkAge, benchmark='saminnt_1', factor="utdnivaa_7.0")
     timeSeriesVisualization.visualizeTrends(coeff1973, coeff1983, coeff1995, coeff2005, coeff2013, coeff2017,
                                             dfTotalWorkAge, benchmark='saminnt_1', factor="utdnivaa_2.0")
+
+    predictingModel.runForecastingIntoFuture(coeff1973, coeff1983, coeff1995, coeff2005, coeff2013, coeff2017)
 
 
 if __name__ == '__main__':

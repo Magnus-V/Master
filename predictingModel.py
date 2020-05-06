@@ -236,12 +236,28 @@ def runRidgePredictionOnYearlyBasis(dataFrame, label, yearFilter, dropYear, drop
     plt.title(f'Results from year {yearFilter}')
     plt.grid(which='major', linestyle='-', linewidth='0.5', color='green')
     plt.grid(which='minor', linestyle=':', linewidth='0.5', color='black')
-    plt.show()
 
     coeff_df = timeSeriesVisualization.visualize_coefficients(regressor.coef_, X.columns, yearFilter)
     #timeSeriesVisualization.visualizeImportanceOfFactor(regressor.coef_, X.columns, dataFrame)
 
     print('Mean Absolute Error:', metrics.mean_absolute_error(y_test, y_pred))
-    print('Mean Squared Error:', metrics.mean_squared_error(y_test, y_pred))
-    print('Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(y_test, y_pred)))
+    #print('Mean Squared Error:', metrics.mean_squared_error(y_test, y_pred))
+    #print('Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(y_test, y_pred)))
     return coeff_df
+
+
+def runForecastingIntoFuture(coeff1973, coeff1983, coeff1995, coeff2005, coeff2013, coeff2017):
+    t1973 = coeff1973.transpose()
+    t1983 = coeff1983.transpose()
+    t1995 = coeff1995.transpose()
+    t2005 = coeff2005.transpose()
+    t2013 = coeff2013.transpose()
+    t2017 = coeff2017.transpose()
+
+    #with pd.option_context('display.max_rows', -1, 'display.max_columns', -1):
+
+
+    #X = pd.DataFrame(dataFrame)
+    #model = VAR(X)
+    #model_fit = model.fit()
+    #yhat = model_fit.forecast(model_fit.y, steps=1)

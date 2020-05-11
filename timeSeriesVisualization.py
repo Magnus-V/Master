@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as mtick
 import sys
 import scipy as sp
+from matplotlib import cm
 
 
 def plot_df(df, x, y, title="", xlabel='Date', ylabel='Value'):
@@ -48,7 +49,7 @@ def visualizeCoefficients(coefs, names):
 
 
 def visualize_coefficients(coefs, namesX, year):
-    names =['Age', 'Female', 'Disability Payment', 'Illness or Injury last 12 months', 'No or pre-school',
+    names =['Age', 'Female', 'Male', 'Disability Payment', 'Illness or Injury last 12 months', 'No or pre-school',
             'Primary', 'Lower Secondary', 'Upper Secondary, basic education', 'Upper secondary, final year',
             'Post-secondary non-tertiary', 'First stage of tertiary, undergraduate level',
             'First stage of tertiary, graduate level',
@@ -80,8 +81,8 @@ def visualize_coefficients(coefs, namesX, year):
                         textcoords="offset points",
                         ha='center', va='bottom')
 
-    autolabel(rects1)
-    autolabel(rects2)
+    #autolabel(rects1)
+    #autolabel(rects2)
 
     plt.show()
     coeff_df = pd.DataFrame(coefs, namesX, columns=['Coefficient'])
@@ -94,6 +95,57 @@ def visualize_coefficients(coefs, namesX, year):
 def visualizeImportanceOfFactor(coef, columns, dataFrame):
     return None
 
+
+
+def visualizeTrendsAllInOnePlot(coeffArray, df):
+    factorList = ['kjonn_1_1.0', 'kjonn_1_2.0', 'utdnivaa_2.0', 'utdnivaa_5.0', "utdnivaa_6.0"]
+    df1973 = df[df['aargang'] == 1973]
+    df1983 = df[df['aargang'] == 1983]
+    df1995 = df[df['aargang'] == 1995]
+    df2005 = df[df['aargang'] == 2005]
+    df2013 = df[df['aargang'] == 2013]
+    df2017 = df[df['aargang'] == 2017]
+
+    df1973m = int(df1973['saminnt_1'].median())
+    df1983m = int(df1983['saminnt_1'].median())
+    df1995m = int(df1995['saminnt_1'].median())
+    df2005m = int(df2005['saminnt_1'].median())
+    df2013m = int(df2013['saminnt_1'].median())
+    df2017m = int(df2017['saminnt_1'].median())
+
+    dfs = [df1973, df1983, df1995, df2005, df2013, df2017]
+    years = [1973, 1983, 1995, 2005, 2013, 2017]
+    means = [df1973m, df1983m, df1995m, df2005m, df2013m, df2017m]
+
+
+    checkit = pd.DataFrame(columns=['aargang', 'factor', 'percentage'])
+    for i in range(0, len(coeffArray)):
+        for factor in factorList:
+            print(f'\nChanges for {factor} ')
+            print(coeffArray[i])
+            coeffValue = coeffArray[i][coeffArray[i].index == factor].to_numpy()[0]
+            oldValue = means[i]
+            newValue = oldValue + coeffValue
+            difference = newValue - oldValue
+            percentage = int((difference / oldValue) * 100)
+            print(f'{years[i]} change in percentage: {percentage}%. N={len(dfs[i])}')
+            year = years[i]
+            checkit = checkit.append({'aargang': year, 'factor': factor, 'percentage': percentage}, ignore_index=True)
+            # Make a bar plot for the coefficients, including their names on the x-axis
+            # checkit.plot(x='aargang', y='percentage', kind='line', label="Percentage", title='', style=".-")
+
+    fig, ax = plt.subplots()
+    color = ['r', 'b', 'g', 'y', 'c', 'gold', 'teal', 'orchid']
+    i = 0
+    for factor in factorList:
+        tempCheckit = checkit[checkit['factor'] == factor]
+        print(tempCheckit)
+        print(color[i])
+        ax.set_title(f'Difference in of cumulative income based on multiple factors')
+        ax.plot(tempCheckit.aargang, tempCheckit.percentage, color=color[i], linestyle="-")
+        ax.yaxis.set_major_formatter(mtick.PercentFormatter())
+        i = i + 1
+    plt.show()
 
 def visualizeTrends(coeff1973, coeff1983, coeff1995, coeff2005, coeff2013, coeff2017, df, benchmark, factor):
     df1973 = df[df['aargang'] == 1973]
@@ -130,8 +182,6 @@ def visualizeTrends(coeff1973, coeff1983, coeff1995, coeff2005, coeff2013, coeff
             ylim = True
         checkit = checkit.append({'aargang': year, 'percentage': percentage}, ignore_index=True)
 
-
-
     fig, ax = plt.subplots()
     ax.set_title(f'Difference in of cumulative income based on {factor}')
     ax.plot(checkit.aargang, checkit.percentage, color="#b32400", linestyle="-")
@@ -143,4 +193,55 @@ def visualizeTrends(coeff1973, coeff1983, coeff1995, coeff2005, coeff2013, coeff
     ax.yaxis.set_major_formatter(mtick.PercentFormatter())
     # Make a bar plot for the coefficients, including their names on the x-axis
     # checkit.plot(x='aargang', y='percentage', kind='line', label="Percentage", title='', style=".-")
+    plt.show()
+
+def visualizeTrendsFactoringIncome(coeffArray, df):
+    factorList = ['kjonn_1_1.0', 'kjonn_1_2.0', 'utdnivaa_2.0', 'utdnivaa_5.0', "utdnivaa_6.0"]
+    df1973 = df[df['aargang'] == 1973]
+    df1983 = df[df['aargang'] == 1983]
+    df1995 = df[df['aargang'] == 1995]
+    df2005 = df[df['aargang'] == 2005]
+    df2013 = df[df['aargang'] == 2013]
+    df2017 = df[df['aargang'] == 2017]
+
+    df1973m = int(df1973['saminnt_1'].median())
+    df1983m = int(df1983['saminnt_1'].median())
+    df1995m = int(df1995['saminnt_1'].median())
+    df2005m = int(df2005['saminnt_1'].median())
+    df2013m = int(df2013['saminnt_1'].median())
+    df2017m = int(df2017['saminnt_1'].median())
+
+    dfs = [df1973, df1983, df1995, df2005, df2013, df2017]
+    years = [1973, 1983, 1995, 2005, 2013, 2017]
+    means = [df1973m, df1983m, df1995m, df2005m, df2013m, df2017m]
+
+
+    checkit = pd.DataFrame(columns=['aargang', 'factor', 'percentage'])
+    for i in range(0, len(coeffArray)):
+        for factor in factorList:
+            print(f'\nChanges for {factor} ')
+            print(coeffArray[i])
+            coeffValue = coeffArray[i][coeffArray[i].index == factor].to_numpy()[0]
+            oldValue = means[i]
+            newValue = oldValue + coeffValue
+            difference = newValue - oldValue
+            percentage = int((difference / oldValue) * 100)
+            print(f'{years[i]} change in percentage: {percentage}%. N={len(dfs[i])}')
+            year = years[i]
+            checkit = checkit.append({'aargang': year, 'factor': factor, 'percentage': percentage}, ignore_index=True)
+            # Make a bar plot for the coefficients, including their names on the x-axis
+            # checkit.plot(x='aargang', y='percentage', kind='line', label="Percentage", title='', style=".-")
+
+    fig, ax = plt.subplots(figsize=(10, 10))
+    color = ['r', 'b', 'g', 'y', 'c', 'gold', 'teal', 'orchid']
+    i = 0
+    for factor in factorList:
+        tempCheckit = checkit[checkit['factor'] == factor]
+        print(tempCheckit)
+        print(color[i])
+        ax.set_title(f'Difference in of cumulative income based on multiple factors')
+        ax.plot(tempCheckit.aargang, tempCheckit.percentage, color=color[i], linestyle="-", label=factor)
+        ax.yaxis.set_major_formatter(mtick.PercentFormatter())
+        i = i + 1
+    plt.legend(loc="upper right")
     plt.show()

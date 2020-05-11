@@ -4,6 +4,9 @@ import matplotlib.pyplot as plt
 import pydot
 import sys, os
 import scipy as sp
+from statsmodels.sandbox.tsa.varma import VAR
+from statsmodels.tsa.stattools import grangercausalitytests
+from statsmodels.tsa.vector_ar.vecm import coint_johansen
 import dataExtract, timeSeriesVisualization
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression, Ridge, Lasso, SGDRegressor, BayesianRidge
@@ -229,16 +232,7 @@ def runRidgePredictionOnYearlyBasis(dataFrame, label, yearFilter, dropYear, drop
     regressor = Ridge(alpha=2)
     regressor.fit(X_train, y_train)
     y_pred = regressor.predict(X_test)
-    df = pd.DataFrame({'Actual': y_test, 'Predicted': y_pred})
-    df1 = df.head(25)
-
-    df1.plot(kind='bar', figsize=(10, 8))
-    plt.title(f'Results from year {yearFilter}')
-    plt.grid(which='major', linestyle='-', linewidth='0.5', color='green')
-    plt.grid(which='minor', linestyle=':', linewidth='0.5', color='black')
-
     coeff_df = timeSeriesVisualization.visualize_coefficients(regressor.coef_, X.columns, yearFilter)
-    #timeSeriesVisualization.visualizeImportanceOfFactor(regressor.coef_, X.columns, dataFrame)
 
     print('Mean Absolute Error:', metrics.mean_absolute_error(y_test, y_pred))
     #print('Mean Squared Error:', metrics.mean_squared_error(y_test, y_pred))
@@ -253,11 +247,126 @@ def runForecastingIntoFuture(coeff1973, coeff1983, coeff1995, coeff2005, coeff20
     t2005 = coeff2005.transpose()
     t2013 = coeff2013.transpose()
     t2017 = coeff2017.transpose()
+    years = [1973, 1983, 1995, 2005, 2013, 2017]
+    dfcombined = pd.concat([t1973, t1983, t1995, t2005, t2013, t2017],
+                           ignore_index=False)
+    dfcombined.index = years
 
-    #with pd.option_context('display.max_rows', -1, 'display.max_columns', -1):
+    # Plot
+    fig, axes = plt.subplots(nrows=4, ncols=2, dpi=120, figsize=(10, 6))
+    for i, ax in enumerate(axes.flatten()):
+        data = dfcombined[dfcombined.columns[i]]
+        ax.plot(data, color='red', linewidth=1)
+        # Decorations
+        ax.set_title(dfcombined.columns[i])
+        ax.xaxis.set_ticks_position('none')
+        ax.yaxis.set_ticks_position('none')
+        ax.spines["top"].set_alpha(0)
+        ax.tick_params(labelsize=6)
+
+    plt.tight_layout()
+
+    maxlag = 8
+    test = 'ssr_chi2test'
+
+    def grangers_causation_matrix(data, variables, test='ssr_chi2test', verbose=False):
+        """Check Granger Causality of all possible combinations of the Time series.
+        The rows are the response variable, columns are predictors. The values in the table
+        are the P-Values. P-Values lesser than the significance level (0.05), implies
+        the Null Hypothesis that the coefficients of the corresponding past values is
+        zero, that is, the X does not cause Y can be rejected.
+
+        data      : pandas dataframe containing the time series variables
+        variables : list containing names of the time series variables.
+        """
+        df = pd.DataFrame(np.zeros((len(variables), len(variables))), columns=variables, index=variables)
+        for c in df.columns:
+            for r in df.index:
+                test_result = grangercausalitytests(data[[r, c]], maxlag=maxlag, verbose=False)
+                p_values = [round(test_result[i + 1][0][test][1], 4) for i in range(maxlag)]
+                if verbose: print(f'Y = {r}, X = {c}, P Values = {p_values}')
+                min_p_value = np.min(p_values)
+                df.loc[r, c] = min_p_value
+        df.columns = [var + '_x' for var in variables]
+        df.index = [var + '_y' for var in variables]
+        return df
+
+    grangers_causation_matrix(dfcombined, variables=dfcombined.columns)
+
+    def cointegration_test(df, alpha=0.05):
+        """Perform Johanson's Cointegration Test and Report Summary"""
+        out = coint_johansen(df, -1, 5)
+        d = {'0.90': 0, '0.95': 1, '0.99': 2}
+        traces = out.lr1
+        cvts = out.cvt[:, d[str(1 - alpha)]]
+
+        def adjust(val, length=6): return str(val).ljust(length)
+
+        # Summary
+        print('Name   ::  Test Stat > C(95%)    =>   Signif  \n', '--' * 20)
+        for col, trace, cvt in zip(df.columns, traces, cvts):
+            print(adjust(col), ':: ', adjust(round(trace, 2), 9), ">", adjust(cvt, 8), ' =>  ', trace > cvt)
+
+    cointegration_test(dfcombined)
+
+    X = dfcombined
+    model = VAR(X)
+    model_fit = model.fit()
+    yhat = model_fit.forecast(model_fit.y, steps=1)
+    print(yhat)
 
 
-    #X = pd.DataFrame(dataFrame)
-    #model = VAR(X)
-    #model_fit = model.fit()
-    #yhat = model_fit.forecast(model_fit.y, steps=1)
+def runRidgePredictionOnYearlyBasisWithIncomeGroups(dataFrame, label, dropYear, dropWorkStatus, minFactor, maxFactor):
+    years = [1973, 1983, 1995, 2005, 2013, 2017]
+    coeffArray = []
+    for i in range(0, len(years)):
+        X = pd.DataFrame(dataFrame)
+        X = X[X['aargang'] == years[i]]
+        medianIncome = X.saminnt_1.median()
+        maxIncome = medianIncome * maxFactor
+        minIncome = medianIncome * minFactor
+        X = X[(X['saminnt_1'] < maxIncome) & (X['saminnt_1'] > minIncome)]
+        print(f'Size of dataset for regression: {X.size}')
+        print(f'Max income = {maxIncome}, Min income ={minIncome}, based on a median of '
+              f'{medianIncome}')
+        y = X
+        X = X.drop(columns=[label, dropYear, dropWorkStatus])
+        # X = dataExtract.insertDataFrameToScale(X)
+        # X = dataExtract.insertDataFrameAndNormalize(X)
+        y = y[label].values
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, shuffle=True, random_state=42)
+        regressor = Ridge(alpha=2)
+        regressor.fit(X_train, y_train)
+        y_pred = regressor.predict(X_test)
+        coeff_df = pd.DataFrame(regressor.coef_, X.columns, columns=['Coefficient'])
+        coeff_df = coeff_df.astype({'Coefficient': int})
+        print(coeff_df)
+        coeffArray.append(coeff_df)
+        print('Mean Absolute Error:', metrics.mean_absolute_error(y_test, y_pred))
+
+    #timeSeriesVisualization.visualizeImportanceOfFactor(regressor.coef_, X.columns, dataFrame)
+    timeSeriesVisualization.visualizeTrendsFactoringIncome(coeffArray, dataFrame)
+
+def runRidgePredictionOnYearlyBasisAllInOne(dataFrame, label, dropYear, dropWorkStatus):
+    years = [1973, 1983, 1995, 2005, 2013, 2017]
+    coeffArray = []
+    for i in range(0, len(years)):
+        X = pd.DataFrame(dataFrame)
+        X = X[X['aargang'] == years[i]]
+        print(f'Size of dataset for regression: {X.size}')
+        y = X
+        X = X.drop(columns=[label, dropYear, dropWorkStatus])
+        # X = dataExtract.insertDataFrameToScale(X)
+        # X = dataExtract.insertDataFrameAndNormalize(X)
+        y = y[label].values
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, shuffle=True, random_state=42)
+        regressor = Ridge(alpha=2)
+        regressor.fit(X_train, y_train)
+        y_pred = regressor.predict(X_test)
+        coeff_df = pd.DataFrame(regressor.coef_, X.columns, columns=['Coefficient'])
+        coeff_df = coeff_df.astype({'Coefficient': int})
+        coeffArray.append(coeff_df)
+        print('Mean Absolute Error:', metrics.mean_absolute_error(y_test, y_pred))
+
+    # timeSeriesVisualization.visualizeImportanceOfFactor(regressor.coef_, X.columns, dataFrame)
+    timeSeriesVisualization.visualizeTrendsFactoringIncome(coeffArray, dataFrame)

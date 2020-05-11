@@ -104,7 +104,7 @@ def main():
     columnsToOneHotEncode1983 = ['utdnivaa', 'sivstat_1', 'ts_stor', 'hels1',
                              'fam_fase']
 
-    columnsToOneHotEncodeOverall = ['utdnivaa', 'sivstat_1']
+    columnsToOneHotEncodeOverall = ['utdnivaa', 'sivstat_1', 'kjonn_1']
 
     dfTotal = dfTotal.dropna()
     dfTotal.reset_index(drop=True, inplace=True)
@@ -154,29 +154,58 @@ def main():
 
     #timeSeriesVisualization.checkDifferentMethods(dfTotalWorkAge, 'saminnt_1', 'aargang')
 
+    predictingModel.runRidgePredictionOnYearlyBasisAllInOne(dataFrame=dfTotalWorkAge, label='saminnt_1',
+                                                            dropWorkStatus='arb1_1', dropYear='aargang',)
+
+    predictingModel.runRidgePredictionOnYearlyBasisWithIncomeGroups(dataFrame=dfTotalWorkAge, label='saminnt_1',
+                                                                    dropWorkStatus='arb1_1', dropYear='aargang',
+                                                                    minFactor=0.8, maxFactor=1.2)
+
     coeff1973 = predictingModel.runRidgePredictionOnYearlyBasis(dataFrame=dfTotalWorkAge, dropYear='aargang',
-                                                                yearFilter=1973, label='saminnt_1', dropWorkStatus='arb1_1')
+                                                                yearFilter=1973, label='saminnt_1',
+                                                                dropWorkStatus='arb1_1')
     coeff1983 = predictingModel.runRidgePredictionOnYearlyBasis(dataFrame=dfTotalWorkAge, dropYear='aargang',
-                                                                yearFilter=1983, label='saminnt_1', dropWorkStatus='arb1_1')
+                                                                yearFilter=1983, label='saminnt_1',
+                                                                dropWorkStatus='arb1_1')
     coeff1995 = predictingModel.runRidgePredictionOnYearlyBasis(dataFrame=dfTotalWorkAge, dropYear='aargang',
-                                                                yearFilter=1995, label='saminnt_1', dropWorkStatus='arb1_1')
-    coeff2005 = predictingModel.runRidgePredictionOnYearlyBasis(dataFrame=dfTotalWorkAge, dropYear='aargang', yearFilter=2005,
-                                               label='saminnt_1', dropWorkStatus='arb1_1')
+                                                                yearFilter=1995, label='saminnt_1',
+                                                                dropWorkStatus='arb1_1')
+    coeff2005 = predictingModel.runRidgePredictionOnYearlyBasis(dataFrame=dfTotalWorkAge, dropYear='aargang',
+                                                                yearFilter=2005, label='saminnt_1',
+                                                                dropWorkStatus='arb1_1')
     coeff2013 = predictingModel.runRidgePredictionOnYearlyBasis(dataFrame=dfTotalWorkAge, dropYear='aargang', yearFilter=2013,
                                                label='saminnt_1', dropWorkStatus='arb1_1')
     coeff2017 = predictingModel.runRidgePredictionOnYearlyBasis(dataFrame=dfTotalWorkAge, dropYear='aargang', yearFilter=2017,
                                                label='saminnt_1', dropWorkStatus='arb1_1')
 
     timeSeriesVisualization.visualizeTrends(coeff1973, coeff1983, coeff1995, coeff2005, coeff2013, coeff2017,
-                                            dfTotalWorkAge, benchmark='saminnt_1', factor="kjonn_1")
+                                            dfTotalWorkAge, benchmark='saminnt_1', factor="kjonn_1_1.0")
+    timeSeriesVisualization.visualizeTrends(coeff1973, coeff1983, coeff1995, coeff2005, coeff2013, coeff2017,
+                                            dfTotalWorkAge, benchmark='saminnt_1', factor="kjonn_1_2.0")
+    timeSeriesVisualization.visualizeTrends(coeff1973, coeff1983, coeff1995, coeff2005, coeff2013, coeff2017,
+                                            dfTotalWorkAge, benchmark='saminnt_1', factor="kode218_1")
+    timeSeriesVisualization.visualizeTrends(coeff1973, coeff1983, coeff1995, coeff2005, coeff2013, coeff2017,
+                                            dfTotalWorkAge, benchmark='saminnt_1', factor="utdnivaa_2.0")
+    timeSeriesVisualization.visualizeTrends(coeff1973, coeff1983, coeff1995, coeff2005, coeff2013, coeff2017,
+                                            dfTotalWorkAge, benchmark='saminnt_1', factor="utdnivaa_3.0")
+    timeSeriesVisualization.visualizeTrends(coeff1973, coeff1983, coeff1995, coeff2005, coeff2013, coeff2017,
+                                            dfTotalWorkAge, benchmark='saminnt_1', factor="utdnivaa_4.0")
+    timeSeriesVisualization.visualizeTrends(coeff1973, coeff1983, coeff1995, coeff2005, coeff2013, coeff2017,
+                                            dfTotalWorkAge, benchmark='saminnt_1', factor="utdnivaa_5.0")
     timeSeriesVisualization.visualizeTrends(coeff1973, coeff1983, coeff1995, coeff2005, coeff2013, coeff2017,
                                             dfTotalWorkAge, benchmark='saminnt_1', factor="utdnivaa_6.0")
     timeSeriesVisualization.visualizeTrends(coeff1973, coeff1983, coeff1995, coeff2005, coeff2013, coeff2017,
                                             dfTotalWorkAge, benchmark='saminnt_1', factor="utdnivaa_7.0")
     timeSeriesVisualization.visualizeTrends(coeff1973, coeff1983, coeff1995, coeff2005, coeff2013, coeff2017,
-                                            dfTotalWorkAge, benchmark='saminnt_1', factor="utdnivaa_2.0")
+                                            dfTotalWorkAge, benchmark='saminnt_1', factor="utdnivaa_8.0")
+    timeSeriesVisualization.visualizeTrends(coeff1973, coeff1983, coeff1995, coeff2005, coeff2013, coeff2017,
+                                            dfTotalWorkAge, benchmark='saminnt_1', factor="helskomb")
+    timeSeriesVisualization.visualizeTrends(coeff1973, coeff1983, coeff1995, coeff2005, coeff2013, coeff2017,
+                                            dfTotalWorkAge, benchmark='saminnt_1', factor="sivstat_1_1.0")
 
-    predictingModel.runForecastingIntoFuture(coeff1973, coeff1983, coeff1995, coeff2005, coeff2013, coeff2017)
+    #predictingModel.runForecastingIntoFuture(coeff1973, coeff1983, coeff1995, coeff2005, coeff2013, coeff2017)
+
+
 
 
 if __name__ == '__main__':

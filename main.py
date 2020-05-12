@@ -154,12 +154,27 @@ def main():
 
     #timeSeriesVisualization.checkDifferentMethods(dfTotalWorkAge, 'saminnt_1', 'aargang')
 
-    predictingModel.runRidgePredictionOnYearlyBasisAllInOne(dataFrame=dfTotalWorkAge, label='saminnt_1',
-                                                            dropWorkStatus='arb1_1', dropYear='aargang',)
-
-    predictingModel.runRidgePredictionOnYearlyBasisWithIncomeGroups(dataFrame=dfTotalWorkAge, label='saminnt_1',
+    coeffArrayLC = predictingModel.runRidgePredictionOnYearlyBasisWithIncomeGroups(dataFrame=dfTotalWorkAge,
+                                                                                   label='saminnt_1',
                                                                     dropWorkStatus='arb1_1', dropYear='aargang',
-                                                                    minFactor=0.8, maxFactor=1.2)
+                                                                    minFactor=0.1, maxFactor=0.59)
+
+    coeffArrayMC = predictingModel.runRidgePredictionOnYearlyBasisWithIncomeGroups(dataFrame=dfTotalWorkAge,
+                                                                                   label='saminnt_1',
+                                                                                    dropWorkStatus='arb1_1',
+                                                                                   dropYear='aargang',
+                                                                                    minFactor=0.6, maxFactor=1.39)
+
+    coeffArrayUC = predictingModel.runRidgePredictionOnYearlyBasisWithIncomeGroups(dataFrame=dfTotalWorkAge,
+                                                                                   label='saminnt_1',
+                                                                                    dropWorkStatus='arb1_1',
+                                                                                   dropYear='aargang',
+                                                                                    minFactor=1.4, maxFactor=99999)
+
+    timeSeriesVisualization.visualizeDifferenceForIncomeGroups(coeffArrayLC, coeffArrayMC, coeffArrayUC, df=dfTotalWorkAge)
+
+    predictingModel.runRidgePredictionOnYearlyBasisAllInOne(dataFrame=dfTotalWorkAge, label='saminnt_1',
+                                                            dropWorkStatus='arb1_1', dropYear='aargang', )
 
     coeff1973 = predictingModel.runRidgePredictionOnYearlyBasis(dataFrame=dfTotalWorkAge, dropYear='aargang',
                                                                 yearFilter=1973, label='saminnt_1',
@@ -204,8 +219,6 @@ def main():
                                             dfTotalWorkAge, benchmark='saminnt_1', factor="sivstat_1_1.0")
 
     #predictingModel.runForecastingIntoFuture(coeff1973, coeff1983, coeff1995, coeff2005, coeff2013, coeff2017)
-
-
 
 
 if __name__ == '__main__':

@@ -340,12 +340,12 @@ def runRidgePredictionOnYearlyBasisWithIncomeGroups(dataFrame, label, dropYear, 
         y_pred = regressor.predict(X_test)
         coeff_df = pd.DataFrame(regressor.coef_, X.columns, columns=['Coefficient'])
         coeff_df = coeff_df.astype({'Coefficient': int})
-        print(coeff_df)
         coeffArray.append(coeff_df)
         print('Mean Absolute Error:', metrics.mean_absolute_error(y_test, y_pred))
 
-    #timeSeriesVisualization.visualizeImportanceOfFactor(regressor.coef_, X.columns, dataFrame)
     timeSeriesVisualization.visualizeTrendsFactoringIncome(coeffArray, dataFrame)
+    return coeffArray
+
 
 def runRidgePredictionOnYearlyBasisAllInOne(dataFrame, label, dropYear, dropWorkStatus):
     years = [1973, 1983, 1995, 2005, 2013, 2017]

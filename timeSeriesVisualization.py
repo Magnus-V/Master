@@ -220,15 +220,14 @@ def visualizeTrendsFactoringIncome(coeffArray, df):
     for i in range(0, len(coeffArray)):
         for factor in factorList:
             print(f'\nChanges for {factor} ')
-            print(coeffArray[i])
             coeffValue = coeffArray[i][coeffArray[i].index == factor].to_numpy()[0]
             oldValue = means[i]
             newValue = oldValue + coeffValue
             difference = newValue - oldValue
             percentage = int((difference / oldValue) * 100)
-            print(f'{years[i]} change in percentage: {percentage}%. N={len(dfs[i])}')
+            print(f'{years[i]} change in percentage: {percentage}%.')
             year = years[i]
-            checkit = checkit.append({'aargang': year, 'factor': factor, 'percentage': percentage}, ignore_index=True)
+            checkit = checkit.append({'aargang': year, 'factor': factor, 'coeffValue': coeffValue}, ignore_index=True)
             # Make a bar plot for the coefficients, including their names on the x-axis
             # checkit.plot(x='aargang', y='percentage', kind='line', label="Percentage", title='', style=".-")
 
@@ -237,11 +236,66 @@ def visualizeTrendsFactoringIncome(coeffArray, df):
     i = 0
     for factor in factorList:
         tempCheckit = checkit[checkit['factor'] == factor]
-        print(tempCheckit)
-        print(color[i])
         ax.set_title(f'Difference in of cumulative income based on multiple factors')
         ax.plot(tempCheckit.aargang, tempCheckit.percentage, color=color[i], linestyle="-", label=factor)
         ax.yaxis.set_major_formatter(mtick.PercentFormatter())
         i = i + 1
     plt.legend(loc="upper right")
     plt.show()
+
+
+def visualizeDifferenceForIncomeGroups(lowerClassCoeffArray, middleClassCoeffArray, upperClassCoefArray, df):
+    factorList = ['kjonn_1_1.0', 'kjonn_1_2.0', 'utdnivaa_2.0', 'utdnivaa_5.0', "utdnivaa_6.0"]
+
+    for i in range(0, len(lowerClassCoeffArray)):
+        print('THIS IS THE ARRAY:')
+        print(lowerClassCoeffArray[i].Coefficient)
+        print('\n')
+
+    df1973 = df[df['aargang'] == 1973]
+    df1983 = df[df['aargang'] == 1983]
+    df1995 = df[df['aargang'] == 1995]
+    df2005 = df[df['aargang'] == 2005]
+    df2013 = df[df['aargang'] == 2013]
+    df2017 = df[df['aargang'] == 2017]
+
+    df1973m = int(df1973['saminnt_1'].median())
+    df1983m = int(df1983['saminnt_1'].median())
+    df1995m = int(df1995['saminnt_1'].median())
+    df2005m = int(df2005['saminnt_1'].median())
+    df2013m = int(df2013['saminnt_1'].median())
+    df2017m = int(df2017['saminnt_1'].median())
+
+    fig, ax = plt.subplots(figsize=(10, 10))
+    color = ['r', 'b', 'g', 'y', 'c', 'gold', 'teal', 'orchid']
+    i = 0
+
+    coef = [lowerClassCoeffArray, middleClassCoeffArray, upperClassCoefArray]
+    years = [1973, 1983, 1995, 2005, 2013, 2017]
+    means = [df1973m, df1983m, df1995m, df2005m, df2013m, df2017m]
+    classGroupArray = ['lower', 'middle', 'upper']
+
+    checkit = pd.DataFrame(columns=['aargang', 'factor', 'coeffValue', 'classGroup'])
+    for i in range(0, len(coef)):
+        for y in range(0, len(coef[i])):
+            for factor in factorList:
+                print(f'\nChanges for {factor} ')
+                coeffValue = coef[i][y][coef[i][y].index == factor].to_numpy()[0]
+                print(coeffValue)
+                oldValue = means[y]
+                newValue = oldValue + coeffValue
+                difference = newValue - oldValue
+                percentage = int((difference / oldValue) * 100)
+                print(f'{years[i]} change in percentage: {percentage}%.')
+                year = years[i]
+                classGroup = classGroupArray[i]
+                checkit = checkit.append({'aargang': year, 'factor': factor, 'coeffValue': coeffValue, 'classGroup' : classGroup}, ignore_index=True)
+                # Make a bar plot for the coefficients, including their names on the x-axis
+                # checkit.plot(x='aargang', y='percentage', kind='line', label="Percentage", title='', style=".-")
+
+    print(checkit)
+    print(checkit.info())
+    print(checkit.describe())
+    print(checkit.head(25))
+
+

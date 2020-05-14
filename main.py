@@ -156,8 +156,9 @@ def main():
 
     coeffArrayLC = predictingModel.runRidgePredictionOnYearlyBasisWithIncomeGroups(dataFrame=dfTotalWorkAge,
                                                                                    label='saminnt_1',
-                                                                    dropWorkStatus='arb1_1', dropYear='aargang',
-                                                                    minFactor=0.1, maxFactor=0.59)
+                                                                                    dropWorkStatus='arb1_1',
+                                                                                   dropYear='aargang', minFactor=0.1,
+                                                                                   maxFactor=0.59)
 
     coeffArrayMC = predictingModel.runRidgePredictionOnYearlyBasisWithIncomeGroups(dataFrame=dfTotalWorkAge,
                                                                                    label='saminnt_1',
@@ -169,7 +170,7 @@ def main():
                                                                                    label='saminnt_1',
                                                                                     dropWorkStatus='arb1_1',
                                                                                    dropYear='aargang',
-                                                                                    minFactor=1.4, maxFactor=99999)
+                                                                                    minFactor=1.4, maxFactor=2.2)
 
     timeSeriesVisualization.visualizeDifferenceForIncomeGroups(coeffArrayLC, coeffArrayMC, coeffArrayUC, df=dfTotalWorkAge)
 

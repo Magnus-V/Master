@@ -214,9 +214,8 @@ def visualizeTrendsFactoringIncome(coeffArray, df):
     dfs = [df1973, df1983, df1995, df2005, df2013, df2017]
     years = [1973, 1983, 1995, 2005, 2013, 2017]
     means = [df1973m, df1983m, df1995m, df2005m, df2013m, df2017m]
-
-
     checkit = pd.DataFrame(columns=['aargang', 'factor', 'percentage'])
+
     for i in range(0, len(coeffArray)):
         for factor in factorList:
             print(f'\nChanges for {factor} ')
@@ -227,7 +226,7 @@ def visualizeTrendsFactoringIncome(coeffArray, df):
             percentage = int((difference / oldValue) * 100)
             print(f'{years[i]} change in percentage: {percentage}%.')
             year = years[i]
-            checkit = checkit.append({'aargang': year, 'factor': factor, 'coeffValue': coeffValue}, ignore_index=True)
+            checkit = checkit.append({'aargang': year, 'factor': factor, 'percentage': percentage}, ignore_index=True)
             # Make a bar plot for the coefficients, including their names on the x-axis
             # checkit.plot(x='aargang', y='percentage', kind='line', label="Percentage", title='', style=".-")
 
@@ -266,10 +265,6 @@ def visualizeDifferenceForIncomeGroups(lowerClassCoeffArray, middleClassCoeffArr
     df2013m = int(df2013['saminnt_1'].median())
     df2017m = int(df2017['saminnt_1'].median())
 
-    fig, ax = plt.subplots(figsize=(10, 10))
-    color = ['r', 'b', 'g', 'y', 'c', 'gold', 'teal', 'orchid']
-    i = 0
-
     coef = [lowerClassCoeffArray, middleClassCoeffArray, upperClassCoefArray]
     years = [1973, 1983, 1995, 2005, 2013, 2017]
     means = [df1973m, df1983m, df1995m, df2005m, df2013m, df2017m]
@@ -281,21 +276,53 @@ def visualizeDifferenceForIncomeGroups(lowerClassCoeffArray, middleClassCoeffArr
             for factor in factorList:
                 print(f'\nChanges for {factor} ')
                 coeffValue = coef[i][y][coef[i][y].index == factor].to_numpy()[0]
-                print(coeffValue)
+                coeffValue = coeffValue[0]
                 oldValue = means[y]
                 newValue = oldValue + coeffValue
                 difference = newValue - oldValue
                 percentage = int((difference / oldValue) * 100)
-                print(f'{years[i]} change in percentage: {percentage}%.')
-                year = years[i]
+                print(f'{years[y]} change in percentage: {percentage}%.')
+                year = years[y]
                 classGroup = classGroupArray[i]
-                checkit = checkit.append({'aargang': year, 'factor': factor, 'coeffValue': coeffValue, 'classGroup' : classGroup}, ignore_index=True)
+                checkit = checkit.append({'aargang': year, 'factor': factor, 'coeffValue': coeffValue,
+                                          'classGroup' : classGroup}, ignore_index=True)
                 # Make a bar plot for the coefficients, including their names on the x-axis
                 # checkit.plot(x='aargang', y='percentage', kind='line', label="Percentage", title='', style=".-")
+
+
+    print(checkit)
+    color = ['r', 'b', 'g', 'y', 'c', 'gold', 'teal', 'orchid']
+    i = 0
+    width = 0.15
+    barWidth = 0.1
+    indices = range(1, len(factorList) + 1)
+    indices2 = range(1, len(factorList) + 1)
+    for factor, x in zip(factorList, indices):
+        fig, ax = plt.subplots(figsize=(10, 10))
+        tempCheckit = checkit[checkit['factor'] == factor]
+        for year, y in zip(years, indices2):
+            tempYearCheckit = tempCheckit[tempCheckit['aargang'] == year]
+            print(year)
+            lc = tempYearCheckit[tempCheckit['classGroup'] == 'lower']
+            print(lc)
+            mc = tempYearCheckit[tempCheckit['classGroup'] == 'middle']
+            print(mc)
+            uc = tempYearCheckit[tempCheckit['classGroup'] == 'upper']
+            print(uc)
+            ax.set_title(f'Difference in of cumulative income based on {factor}')
+            ax.barh(y - width, lc.coeffValue, barWidth, color='c', label='Lower class')
+            ax.barh(y, mc.coeffValue, barWidth, color='gold', label='Middle class')
+            ax.barh(y + width, uc.coeffValue, barWidth, color='orchid', label='Upper class')
+            ax.invert_yaxis()  # labels read top-to-bottom
+            i = i + 1
+        plt.legend(loc="upper right")
+        plt.grid(which='major', linestyle='-', linewidth='0.5', color='black')
+        plt.yticks(np.arange(len(years)), years)
+        plt.show()
 
     print(checkit)
     print(checkit.info())
     print(checkit.describe())
-    print(checkit.head(25))
+    print(checkit.head(100))
 
 

@@ -21,9 +21,9 @@ livingConditionsSurvey2018 = os.path.join(my_data_folder, r'LivingConditionsSurv
 
 
 # create sqlalchemy engine
-engine = create_engine("mysql+pymysql://admin:Jule@Nissen94@localhost/master_thesis"
+engine = create_engine("mysql+pymysql://@localhost/master_thesis"
                        .format(user="root",
-                               pw="Jule@Nissen94",
+                               pw="",
                                db="master_thesis"))
 
 def readCSVSurveyConvertToDataFrame(csvfile):

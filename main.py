@@ -131,8 +131,8 @@ def main():
     df2017WorkAge = df2017WorkAge.apply(pd.to_numeric, errors='coerce').dropna()
 
 
-    #dfTotalWorkAgeScaled = dataExtract.insertDataFrameToScale(dfTotalWorkAge)
-    #dfTotalWorkAgeNormalized = dataExtract.insertDataFrameAndNormalize(dfTotalWorkAge)
+    dfTotalWorkAgeScaled = dataExtract.insertDataFrameToScale(dfTotalWorkAge)
+    dfTotalWorkAgeNormalized = dataExtract.insertDataFrameAndNormalize(dfTotalWorkAge)
 
     #x_scaled = np.asarray(dfTotalWorkAgeScaled)
     #kmeans.runKMeansOnScaledData(x_scaled)
@@ -152,7 +152,12 @@ def main():
     #predictingModel.predictionModelLinearRegression(df2016WorkAge, 'saminnt_1', 'aar')
     #predictingModel.predictionModelLinearRegression(df2017WorkAge, 'saminnt_1', 'aar')
 
+
     #timeSeriesVisualization.checkDifferentMethods(dfTotalWorkAge, 'saminnt_1', 'aargang')
+
+    #with pd.option_context('display.max_rows', -1, 'display.max_columns', -1):
+
+    print(dfTotalWorkAge.cov())
 
     coeffArrayLC = predictingModel.runRidgePredictionOnYearlyBasisWithIncomeGroups(dataFrame=dfTotalWorkAge,
                                                                                    label='saminnt_1',

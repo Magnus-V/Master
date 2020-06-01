@@ -448,9 +448,9 @@ def streamlineDataframe2005(df):
                            'v0013', 'v0009', 'v0004', 'v2300']))
     return df
 
-test1 = streamlineDataframe1973(df1973)
-test2 = streamlineDataframe1983(df1983)
-test3 = streamlineDataframe1995(df1995)
-test4 = streamlineDataframe2005(df2005)
+#test1 = streamlineDataframe1973(df1973)
+#test2 = streamlineDataframe1983(df1983)
+#test3 = streamlineDataframe1995(df1995)
+#test4 = streamlineDataframe2005(df2005)
 
 

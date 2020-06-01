@@ -26,7 +26,7 @@ def predictionModelLinearRegression(dataFrame, label, dropYear):
     #X = dataExtract.insertDataFrameAndNormalize(X)
     y = y[label].values
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, shuffle=False, random_state=42)
-    regressor = LinearRegression()
+    regressor = LinearRegression(normalize=True)
     regressor.fit(X_train, y_train)
     coeff_df = pd.DataFrame(regressor.coef_, X.columns, columns=['Coefficient'])
     coeff_df = coeff_df.astype({'Coefficient':int})
@@ -76,7 +76,7 @@ def predictionModelRidgeRegression(dataFrame, label, dropYear):
     print('Mean Squared Error:', metrics.mean_squared_error(y_test, y_pred))
     print('Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(y_test, y_pred)))
 
-def predictionModelLassoRegression(dataFrame, label, dropYear, yearToChoose):
+def predictionModelLassoRegression(dataFrame, label, dropYear):
     X = pd.DataFrame(dataFrame)
     y = pd.DataFrame(dataFrame)
     X = X.drop(columns=label)
@@ -110,7 +110,7 @@ def predictionModelSDGRegression(dataFrame, label, dropYear):
     y = pd.DataFrame(dataFrame)
     X = X.drop(columns=label)
     X = X.drop(columns=dropYear)
-    #X = dataExtract.insertDataFrameToScale(X)
+    X = dataExtract.insertDataFrameToScale(X)
     #X = dataExtract.insertDataFrameAndNormalize(X)
     y = y[label].values
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, shuffle=False, random_state=42)
@@ -172,21 +172,17 @@ def predictingRandomForestRegression(dataFrame, label, dropYear):
     print('Mean Squared Error:', metrics.mean_squared_error(y_test, y_pred1))
     print('Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(y_test, y_pred1)))
 
-def predictingDecisionsTreeRegression(dataFrame, label, dropYear, dropWorkStatus):
+def predictingDecisionsTreeRegression(dataFrame, label, dropYear):
     print('\nDecisionTreeRegression\n')
-    X1 = pd.DataFrame(dataFrame)
     X = pd.DataFrame(dataFrame)
     y = pd.DataFrame(dataFrame)
     X = X.drop(columns=label)
-    X = X.drop(columns=([dropYear, dropWorkStatus]))
+    X = X.drop(columns=dropYear)
     #X = dataExtract.insertDataFrameToScale(X)
     # X = dataExtract.insertDataFrameAndNormalize(X)
     y = y[label].values
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, shuffle=False, random_state=42)
-    regressor1 = DecisionTreeRegressor(criterion='mse', splitter='best', min_samples_split=2,
-                                      min_samples_leaf=1, min_weight_fraction_leaf=0.0, max_features=None,
-                                      random_state=10, max_leaf_nodes=None, min_impurity_decrease=0.0,
-                                      min_impurity_split=None, presort='deprecated', ccp_alpha=0.0)
+    regressor1 = DecisionTreeRegressor()
     regressor2 = DecisionTreeRegressor(criterion='mse', splitter='best', max_depth=5, min_samples_split=2,
                                        min_samples_leaf=1, min_weight_fraction_leaf=0.0, max_features=None,
                                        random_state=10, max_leaf_nodes=None, min_impurity_decrease=0.0,
@@ -329,6 +325,7 @@ def runRidgePredictionOnYearlyBasisWithIncomeGroups(dataFrame, label, dropYear, 
         print(f'Size of dataset for regression: {X.size}')
         print(f'Max income = {maxIncome}, Min income ={minIncome}, based on a median of '
               f'{medianIncome}')
+        medianIncome = X.saminnt_1.median()
         y = X
         X = X.drop(columns=[label, dropYear, dropWorkStatus])
         # X = dataExtract.insertDataFrameToScale(X)
@@ -340,7 +337,9 @@ def runRidgePredictionOnYearlyBasisWithIncomeGroups(dataFrame, label, dropYear, 
         y_pred = regressor.predict(X_test)
         coeff_df = pd.DataFrame(regressor.coef_, X.columns, columns=['Coefficient'])
         coeff_df = coeff_df.astype({'Coefficient': int})
+        coeff_df['MedianIncome'] = medianIncome
         coeffArray.append(coeff_df)
+        print(coeff_df)
         print('Mean Absolute Error:', metrics.mean_absolute_error(y_test, y_pred))
 
     timeSeriesVisualization.visualizeTrendsFactoringIncome(coeffArray, dataFrame)

@@ -5,7 +5,7 @@ import columnsToEngineer
 import numpy as np
 import pandas as pd
 import timeSeriesVisualization
-import predictingModel
+import predictingModel, dataExploration
 
 def main():
     df1973filtered = dataExtract.filterOutDatasetOnListOfConditions(dataExtract.df1973,
@@ -158,6 +158,8 @@ def main():
     #with pd.option_context('display.max_rows', -1, 'display.max_columns', -1):
 
     print(dfTotalWorkAge.cov())
+
+    dataExploration.heatmapCorrelation(dfTotalWorkAge)
 
     coeffArrayLC = predictingModel.runRidgePredictionOnYearlyBasisWithIncomeGroups(dataFrame=dfTotalWorkAge,
                                                                                    label='saminnt_1',

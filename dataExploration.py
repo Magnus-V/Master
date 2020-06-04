@@ -26,3 +26,11 @@ plotting.scatter_matrix(df2017filtered, figsize=(15,15), marker='o', hist_kwds={
                         s=60, alpha=0.8, cmap=mglearn.cm3)
 
 
+def heatmapCorrelation(dataFrame):
+    corrmat = dataFrame.corr()
+    top_corr_features = corrmat.index
+    plt.figure(figsize=(20,20))
+    #plot heat map
+    g=sns.heatmap(dataFrame[top_corr_features].corr(),annot=True,cmap="RdYlGn")
+    heatmapFigure = g.get_figure()
+    heatmapFigure.savefig('heatmap.png', dpi=400)

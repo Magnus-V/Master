@@ -16,7 +16,7 @@ import kmeans
 import PCA
 import columnsToEngineer
 import numpy as np
-
+import seaborn as sns
 
 df2017 = dataExtract.EUSILC2017
 df2017 = dataExtract.readCSVSurveyConvertToDataFrame(df2017)

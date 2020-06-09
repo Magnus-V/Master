@@ -280,6 +280,7 @@ def fixDisabilityTotal(df, label):
 def fixSSHEduCoding(df, labelOfEduCode):
     educationSeries = df[labelOfEduCode].astype(str)
     educationSeries = educationSeries.str[:1]
+    educationSeries = pd.to_numeric(educationSeries, errors="coerce")
     educationSeries.replace(5, 6, inplace=True)
     return educationSeries
 
@@ -289,18 +290,20 @@ def fix1995edu(df, labelOfEducation):
     educationSeries = educationSeries.replace(np.nan, 9)
     df.replace(r'\s+', np.nan, regex=True)
     educationSeries = educationSeries.str[:1]
+    educationSeries = pd.to_numeric(educationSeries, errors="coerce")
     return educationSeries
 
 
 def fixOldEncoding(df, labelOfEducation):
     educationSeries = df[labelOfEducation].astype(str)
     educationSeries = educationSeries.str[:1]
+    educationSeries = pd.to_numeric(educationSeries)
     educationSeries.replace(3, 2, inplace=True)
     educationSeries.replace(4, 2, inplace=True)
     educationSeries.replace(5, 3, inplace=True)
-    educationSeries.replace(6, 2, inplace=True)
-    educationSeries.replace(7, 3, inplace=True)
-    educationSeries.replace(8, 4, inplace=True)
+    educationSeries.replace(6, 4, inplace=True)
+    educationSeries.replace(7, 4, inplace=True)
+    educationSeries.replace(8, 6, inplace=True)
     return educationSeries
 
 

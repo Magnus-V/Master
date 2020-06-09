@@ -312,20 +312,21 @@ def runForecastingIntoFuture(coeff1973, coeff1983, coeff1995, coeff2005, coeff20
     print(yhat)
 
 
-def runRidgePredictionOnYearlyBasisWithIncomeGroups(dataFrame, label, dropYear, dropWorkStatus, minFactor, maxFactor):
+def runRidgePredictionOnYearlyBasisWithIncomeGroups(dataFrame, label, dropYear, dropWorkStatus, minFactor, maxFactor,
+                                                    wagegroup):
     years = [1973, 1983, 1995, 2005, 2013, 2017]
     coeffArray = []
     for i in range(0, len(years)):
         X = pd.DataFrame(dataFrame)
         X = X[X['aargang'] == years[i]]
-        medianIncome = X.saminnt_1.median()
+        medianIncome = X.SamletInntekt.median()
         maxIncome = medianIncome * maxFactor
         minIncome = medianIncome * minFactor
-        X = X[(X['saminnt_1'] < maxIncome) & (X['saminnt_1'] > minIncome)]
+        X = X[(X['SamletInntekt'] < maxIncome) & (X['SamletInntekt'] > minIncome)]
         print(f'Size of dataset for regression: {X.size}')
         print(f'Max income = {maxIncome}, Min income ={minIncome}, based on a median of '
               f'{medianIncome}')
-        medianIncome = X.saminnt_1.median()
+        medianIncome = X.SamletInntekt.median()
         y = X
         X = X.drop(columns=[label, dropYear, dropWorkStatus])
         # X = dataExtract.insertDataFrameToScale(X)
@@ -342,7 +343,7 @@ def runRidgePredictionOnYearlyBasisWithIncomeGroups(dataFrame, label, dropYear, 
         print(coeff_df)
         print('Mean Absolute Error:', metrics.mean_absolute_error(y_test, y_pred))
 
-    timeSeriesVisualization.visualizeTrendsFactoringIncome(coeffArray, dataFrame)
+    timeSeriesVisualization.visualizeTrendsFactoringIncome(coeffArray, dataFrame, wagegroup=wagegroup)
     return coeffArray
 
 
@@ -368,4 +369,4 @@ def runRidgePredictionOnYearlyBasisAllInOne(dataFrame, label, dropYear, dropWork
         print('Mean Absolute Error:', metrics.mean_absolute_error(y_test, y_pred))
 
     # timeSeriesVisualization.visualizeImportanceOfFactor(regressor.coef_, X.columns, dataFrame)
-    timeSeriesVisualization.visualizeTrendsFactoringIncome(coeffArray, dataFrame)
+    timeSeriesVisualization.visualizeTrendsFactoringIncome(coeffArray, dataFrame, wagegroup="overall")

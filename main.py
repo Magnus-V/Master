@@ -157,74 +157,89 @@ def main():
 
     #with pd.option_context('display.max_rows', -1, 'display.max_columns', -1):
 
+    for x in dfTotalWorkAge.columns:
+        print(x)
+
+
+    dfTotalWorkAge = dfTotalWorkAge.rename(columns={"alder_1":"alder","kode218_1":"Uføretrygdet","saminnt_1":"SamletInntekt",
+                                   "utdnivaa_0.0":"IngenUtdanning","utdnivaa_1.0":"Barneskole","utdnivaa_2.0":
+                                    "Ungdomsskole","utdnivaa_3.0":"VideregåendeGrunn","utdnivaa_4.0":"VideregåendeAvslut",
+                                   "utdnivaa_5.0":"Påbygg","utdnivaa_6.0":"UniversitetBachelor","utdnivaa_7.0":"UniversitetMaster",
+                                   "utdnivaa_8.0":"Forskernivå","sivstat_1_1.0":"Ugift","sivstat_1_2.0":"Gift/partnerskap",
+                                   "sivstat_1_3.0":"Enke/enkemann","sivstat_1_4.0":"Separert","sivstat_1_5.0":"Skilt"
+                                    ,"kjonn_1_1":"Mann","kjonn_1_2":"Kvinne"}, errors="raise")
+
     print(dfTotalWorkAge.cov())
 
     dataExploration.heatmapCorrelation(dfTotalWorkAge)
 
     coeffArrayLC = predictingModel.runRidgePredictionOnYearlyBasisWithIncomeGroups(dataFrame=dfTotalWorkAge,
-                                                                                   label='saminnt_1',
+                                                                                   label='SamletInntekt',
                                                                                     dropWorkStatus='arb1_1',
                                                                                    dropYear='aargang', minFactor=0.1,
-                                                                                   maxFactor=0.59)
+                                                                                   maxFactor=0.59,
+                                                                                   wagegroup="low-income class")
 
     coeffArrayMC = predictingModel.runRidgePredictionOnYearlyBasisWithIncomeGroups(dataFrame=dfTotalWorkAge,
-                                                                                   label='saminnt_1',
+                                                                                   label='SamletInntekt',
                                                                                     dropWorkStatus='arb1_1',
                                                                                    dropYear='aargang',
-                                                                                    minFactor=0.6, maxFactor=1.39)
+                                                                                    minFactor=0.6, maxFactor=1.39,
+                                                                                   wagegroup="middle-income class")
 
     coeffArrayUC = predictingModel.runRidgePredictionOnYearlyBasisWithIncomeGroups(dataFrame=dfTotalWorkAge,
-                                                                                   label='saminnt_1',
+                                                                                   label='SamletInntekt',
                                                                                     dropWorkStatus='arb1_1',
                                                                                    dropYear='aargang',
-                                                                                    minFactor=1.4, maxFactor=2.2)
+                                                                                    minFactor=1.4, maxFactor=2.2,
+                                                                                   wagegroup="high-income class")
 
     timeSeriesVisualization.visualizeDifferenceForIncomeGroups(coeffArrayLC, coeffArrayMC, coeffArrayUC, df=dfTotalWorkAge)
 
-    predictingModel.runRidgePredictionOnYearlyBasisAllInOne(dataFrame=dfTotalWorkAge, label='saminnt_1',
+    predictingModel.runRidgePredictionOnYearlyBasisAllInOne(dataFrame=dfTotalWorkAge, label='SamletInntekt',
                                                             dropWorkStatus='arb1_1', dropYear='aargang', )
 
     coeff1973 = predictingModel.runRidgePredictionOnYearlyBasis(dataFrame=dfTotalWorkAge, dropYear='aargang',
-                                                                yearFilter=1973, label='saminnt_1',
+                                                                yearFilter=1973, label='SamletInntekt',
                                                                 dropWorkStatus='arb1_1')
     coeff1983 = predictingModel.runRidgePredictionOnYearlyBasis(dataFrame=dfTotalWorkAge, dropYear='aargang',
-                                                                yearFilter=1983, label='saminnt_1',
+                                                                yearFilter=1983, label='SamletInntekt',
                                                                 dropWorkStatus='arb1_1')
     coeff1995 = predictingModel.runRidgePredictionOnYearlyBasis(dataFrame=dfTotalWorkAge, dropYear='aargang',
-                                                                yearFilter=1995, label='saminnt_1',
+                                                                yearFilter=1995, label='SamletInntekt',
                                                                 dropWorkStatus='arb1_1')
     coeff2005 = predictingModel.runRidgePredictionOnYearlyBasis(dataFrame=dfTotalWorkAge, dropYear='aargang',
-                                                                yearFilter=2005, label='saminnt_1',
+                                                                yearFilter=2005, label='SamletInntekt',
                                                                 dropWorkStatus='arb1_1')
     coeff2013 = predictingModel.runRidgePredictionOnYearlyBasis(dataFrame=dfTotalWorkAge, dropYear='aargang', yearFilter=2013,
-                                               label='saminnt_1', dropWorkStatus='arb1_1')
+                                               label='SamletInntekt', dropWorkStatus='arb1_1')
     coeff2017 = predictingModel.runRidgePredictionOnYearlyBasis(dataFrame=dfTotalWorkAge, dropYear='aargang', yearFilter=2017,
-                                               label='saminnt_1', dropWorkStatus='arb1_1')
+                                               label='SamletInntekt', dropWorkStatus='arb1_1')
 
     timeSeriesVisualization.visualizeTrends(coeff1973, coeff1983, coeff1995, coeff2005, coeff2013, coeff2017,
-                                            dfTotalWorkAge, benchmark='saminnt_1', factor="kjonn_1_1.0")
+                                            dfTotalWorkAge, benchmark='SamletInntekt', factor="Mann")
     timeSeriesVisualization.visualizeTrends(coeff1973, coeff1983, coeff1995, coeff2005, coeff2013, coeff2017,
-                                            dfTotalWorkAge, benchmark='saminnt_1', factor="kjonn_1_2.0")
+                                            dfTotalWorkAge, benchmark='SamletInntekt', factor="Kvinne")
     timeSeriesVisualization.visualizeTrends(coeff1973, coeff1983, coeff1995, coeff2005, coeff2013, coeff2017,
-                                            dfTotalWorkAge, benchmark='saminnt_1', factor="kode218_1")
+                                            dfTotalWorkAge, benchmark='SamletInntekt', factor="Uføretrygdet")
     timeSeriesVisualization.visualizeTrends(coeff1973, coeff1983, coeff1995, coeff2005, coeff2013, coeff2017,
-                                            dfTotalWorkAge, benchmark='saminnt_1', factor="utdnivaa_2.0")
+                                            dfTotalWorkAge, benchmark='SamletInntekt', factor="Ungdomsskole")
     timeSeriesVisualization.visualizeTrends(coeff1973, coeff1983, coeff1995, coeff2005, coeff2013, coeff2017,
-                                            dfTotalWorkAge, benchmark='saminnt_1', factor="utdnivaa_3.0")
+                                            dfTotalWorkAge, benchmark='SamletInntekt', factor="VideregåendeGrunn")
     timeSeriesVisualization.visualizeTrends(coeff1973, coeff1983, coeff1995, coeff2005, coeff2013, coeff2017,
-                                            dfTotalWorkAge, benchmark='saminnt_1', factor="utdnivaa_4.0")
+                                            dfTotalWorkAge, benchmark='SamletInntekt', factor="VideregåendeAvslut")
     timeSeriesVisualization.visualizeTrends(coeff1973, coeff1983, coeff1995, coeff2005, coeff2013, coeff2017,
-                                            dfTotalWorkAge, benchmark='saminnt_1', factor="utdnivaa_5.0")
+                                            dfTotalWorkAge, benchmark='SamletInntekt', factor="Påbygg")
     timeSeriesVisualization.visualizeTrends(coeff1973, coeff1983, coeff1995, coeff2005, coeff2013, coeff2017,
-                                            dfTotalWorkAge, benchmark='saminnt_1', factor="utdnivaa_6.0")
+                                            dfTotalWorkAge, benchmark='SamletInntekt', factor="UniversitetBachelor")
     timeSeriesVisualization.visualizeTrends(coeff1973, coeff1983, coeff1995, coeff2005, coeff2013, coeff2017,
-                                            dfTotalWorkAge, benchmark='saminnt_1', factor="utdnivaa_7.0")
+                                            dfTotalWorkAge, benchmark='SamletInntekt', factor="UniversitetMaster")
     timeSeriesVisualization.visualizeTrends(coeff1973, coeff1983, coeff1995, coeff2005, coeff2013, coeff2017,
-                                            dfTotalWorkAge, benchmark='saminnt_1', factor="utdnivaa_8.0")
+                                            dfTotalWorkAge, benchmark='SamletInntekt', factor="Forskernivå")
     timeSeriesVisualization.visualizeTrends(coeff1973, coeff1983, coeff1995, coeff2005, coeff2013, coeff2017,
-                                            dfTotalWorkAge, benchmark='saminnt_1', factor="helskomb")
+                                            dfTotalWorkAge, benchmark='SamletInntekt', factor="helskomb")
     timeSeriesVisualization.visualizeTrends(coeff1973, coeff1983, coeff1995, coeff2005, coeff2013, coeff2017,
-                                            dfTotalWorkAge, benchmark='saminnt_1', factor="sivstat_1_1.0")
+                                            dfTotalWorkAge, benchmark='SamletInntekt', factor="Ugift")
 
     #predictingModel.runForecastingIntoFuture(coeff1973, coeff1983, coeff1995, coeff2005, coeff2013, coeff2017)
 
